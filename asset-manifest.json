@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/sudosumo/static/css/main.e918d711.css",
+    "main.js": "/sudosumo/static/js/main.fa0e899a.js",
+    "index.html": "/sudosumo/index.html",
+    "main.e918d711.css.map": "/sudosumo/static/css/main.e918d711.css.map",
+    "main.fa0e899a.js.map": "/sudosumo/static/js/main.fa0e899a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e918d711.css",
+    "static/js/main.fa0e899a.js"
+  ]
+}
