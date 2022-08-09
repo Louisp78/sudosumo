@@ -11,6 +11,10 @@ test('array rep of string', () => {
     expect(Utils.arrayRepOfString('4')).toStrictEqual([4]);
 })
 
+test('array rep of string v2', () => {
+    expect(Array.from('12').map(elt => parseInt(elt))).toStrictEqual([1, 2]);
+});
+
 test('test histogram', () => {
     expect(Utils.getHisto([[1, 2], [1, 2], [4], [5]])).toStrictEqual({'12': 2, '4': 1, '5': 1});
     expect(Utils.getHisto([[5]])).toStrictEqual({'5': 1});

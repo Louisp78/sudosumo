@@ -44,19 +44,15 @@ class Utils {
     }
 
     static stringRepOfArray(array){
-        let res = ''
-        res = array.reduce((accu, elt) => accu + elt.toString(), '')
-        return res;
+        if (Array.isArray(array) == false)
+            throw new TypeError('Must be an array to convert to string')
+        return array.join('');
     }
 
     static arrayRepOfString(str){
         if (typeof str !== 'string')
             throw new TypeError('Must be a string to convert to an array')
-        var res = []
-        for(const num of str){
-            res.push(parseInt(num))
-        }
-        return res;
+        return Array.from(str).map(elt => parseInt(elt));
     }
 
     static areSameArray(array1, array2){
