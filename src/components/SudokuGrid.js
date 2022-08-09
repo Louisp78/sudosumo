@@ -4,39 +4,6 @@ import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
 
 class SudokuGrid extends React.Component {
 
-constructor(props){
-    super(props)
-    this.state = {
-      currentNumber: 1
-    }
-}
-  
-nextNumber(){
-    const currentNumber = this.state.currentNumber;
-    if (currentNumber + 1 > 9){
-      this.setState({
-        currentNumber: 1
-      })
-    } else {
-      this.setState({
-        currentNumber: currentNumber + 1
-      })
-    }
-  }
-
-prevNumber(){
-    const currentNumber = this.state.currentNumber;
-    if (currentNumber - 1 < 1){
-      this.setState({
-        currentNumber: 9
-      })
-    } else {
-      this.setState({
-        currentNumber: currentNumber - 1
-      });
-    }
-  }
-
 renderSquare(i){
     /*const x = Math.floor(i / 9);    
     const y = i % 9;
@@ -51,7 +18,8 @@ renderSquare(i){
     return <Box 
                 key={i} 
                 value={this.props.values[i]}
-                number={this.state.currentNumber}
+                number={this.props.currentNumber}
+                editMode={this.props.editMode}
                 onClick={() => this.props.handleClick(i)}
                 />;
 }
@@ -69,8 +37,8 @@ render(){
     return (
     <div className='board'>
         <ReactScrollWheelHandler
-        upHandler={(e) => this.nextNumber()}
-        downHandler={(e) => this.prevNumber()}
+        upHandler={(e) => this.props.onScrollUp()}
+        downHandler={(e) => this.props.onScrollDown()}
         >
             <ul>  
                 {this.renderBoard()}
