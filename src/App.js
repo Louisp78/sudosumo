@@ -4,7 +4,7 @@ import React from 'react';
 import SudokuSolver from './components/SudokuSolver.js'
 import Utils from './components/Utils.js'
 
-  const puzzleState = {
+  const PuzzleState = {
     Undone: 'undone',
     Invalid: 'invalid',
     Valid: 'valid'
@@ -16,11 +16,18 @@ class App extends React.Component {
     this.state = {
       values: this.props.current != null ? Utils.convertMatrixToArray(this.props.current) : Array(81).fill(null),
       solveDisplay: false,
-      puzzleState: puzzleState.Undone,
+      puzzleState: PuzzleState.Undone,
+      displayUndoClean: false,
     }
   }
 
   handleClick(index){
+    if (this.state.displayUndoClean)
+    {
+      this.setState({
+        displayUndoClean: false,
+      });
+    }
     if (this.state.solveDisplay == false)
     {
       const items = this.state.values.slice()
@@ -61,11 +68,11 @@ class App extends React.Component {
         solveDisplay: true});
       if (sudokuSolver.isSolved() == false){
         this.setState({
-          puzzleState: puzzleState.Invalid,
+          puzzleState: PuzzleState.Invalid,
         })
       } else{
         this.setState({
-          puzzleState: puzzleState.Valid,
+          puzzleState: PuzzleState.Valid,
         })
       }
     }
@@ -73,7 +80,7 @@ class App extends React.Component {
   }
 
   hint(){
-    if (this.state.puzzleState == puzzleState.Undone){
+    if (this.state.puzzleState == PuzzleState.Undone){
       const grid = Utils.convertArrayToMatrix(this.state.values, 9)
       const sudokuSolver = new SudokuSolver(grid)
       console.log(grid)
@@ -85,16 +92,54 @@ class App extends React.Component {
     }
   }
 
+
+  /// Generate a new sudoku
+  /// TODO: Add generation with level of difficulty
+  newSudoku(){
+    return null;
+  }
+
+  /// Clean all the grid
+  clean(){
+    if (Utils.areSameArray(this.state.values, Array(81).fill(null)) == false){
+      this.setState({
+        displayUndoClean: true
+      });
+    }
+    this.setState({
+      values: Array(81).fill(null),
+      prevValues: this.state.values
+    })
+  }
+
+  /// Undo the previous cleaning
+  undoClean(){
+    this.setState({
+      values: this.state.prevValues,
+      displayUndoClean: false
+    });
+  }
+
   checkInvalid(){
-    if (this.state.puzzleState == puzzleState.Invalid){
+    if (this.state.puzzleState == PuzzleState.Invalid){
       return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
-    } else if (this.state.puzzleState == puzzleState.Valid){
+    } else if (this.state.puzzleState == PuzzleState.Valid){
       return <p style={{color: "green"}}>Puzzle solved !</p>;
     }
     else {
       return null;
     }
   }
+
+  renderCleanning(){
+    if (this.state.displayUndoClean){
+      return <button onClick={(e) => this.undoClean()}>Undo clean</button>
+    } else {
+      return <button onClick={(e) => this.clean()}>Clean sudoku</button>
+    }
+  }
+
+
 
   render(){
   return (
@@ -104,6 +149,8 @@ class App extends React.Component {
         <div className='containerOptions'>
           {this.checkInvalid()}
           <div className='options'>
+            <button onClick={(e) => this.newSudoku()}>New sudoku</button>
+            {this.renderCleanning()}
             <button onClick={(e) => this.solve()}>Solve</button>
             <button onClick={(e) => this.hint()}>Hint</button>
           </div>
