@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/sudosumo/static/css/main.ce3131bd.css",
-    "main.js": "/sudosumo/static/js/main.ec0d2cec.js",
+    "main.js": "/sudosumo/static/js/main.acf91305.js",
     "index.html": "/sudosumo/index.html",
     "main.ce3131bd.css.map": "/sudosumo/static/css/main.ce3131bd.css.map",
-    "main.ec0d2cec.js.map": "/sudosumo/static/js/main.ec0d2cec.js.map"
+    "main.acf91305.js.map": "/sudosumo/static/js/main.acf91305.js.map"
   },
   "entrypoints": [
     "static/css/main.ce3131bd.css",
-    "static/js/main.ec0d2cec.js"
+    "static/js/main.acf91305.js"
   ]
 }
