@@ -1,4 +1,4 @@
-# sudosumo
+# SudoSumo :ramen:
 An online sudoku, made with React : [SudoSumo](https://Louisp78.github.io/sudosumo)
 
 ## Solver
