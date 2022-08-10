@@ -207,6 +207,9 @@ class App extends React.Component {
   return (
     <div className="App">
       <div className="game">
+        <div className='titleContainer'>
+        <h1>SudoSumo 🍜</h1>
+        </div>
         <SudokuGrid 
         values={this.state.values} 
         currentNumber={this.state.currentNumber}
