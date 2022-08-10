@@ -43,6 +43,16 @@ class Utils {
         return true;
     }
 
+    static areSameMatrix3D(array1, array2){
+        if (array1.length != array2.length)
+            return false;
+        for (var x = 0; x < array1.length; x++){
+            if (array1[x].every((elt, index) => elt.join('') === array2[x][index].join('')) == false)
+                return false;
+        }
+        return true;
+    }
+
     static stringRepOfArray(array){
         if (Array.isArray(array) == false)
             throw new TypeError('Must be an array to convert to string')
@@ -60,6 +70,22 @@ class Utils {
         return Array.isArray(array1) && Array.isArray(array2)
         && array1.length === array2.length && array1.every((elt, index) => elt == array2[index]);
     }
+
+    /// min and max are inclusive
+    static getRandomInt(min, max){
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    static deepCopyMatrix(matrix){
+        var newMatrix = [];
+        for (var i = 0; i < matrix.length; i++)
+            newMatrix[i] = matrix[i].slice();
+        return newMatrix;
+    }
+
+
 
 
 }
