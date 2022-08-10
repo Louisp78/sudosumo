@@ -139,7 +139,8 @@ class App extends React.Component {
 
   /// Clean all the grid
   clean(){
-    if (Utils.areSameArray(this.state.values, Array(81).fill(null)) == false){
+    if (Utils.areSameArray(this.state.values, Array(81).fill(null)) == false)
+    {
       console.log('is cleaning');
       this.setState({
         displayUndoClean: true
@@ -147,7 +148,8 @@ class App extends React.Component {
     }
     this.setState({
       values: Array(81).fill(null),
-      prevValues: this.state.values
+      prevValues: this.state.values,
+      puzzleState: PuzzleState.Undone
     })
   }
 
@@ -157,6 +159,12 @@ class App extends React.Component {
       values: this.state.prevValues,
       displayUndoClean: false
     });
+    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.prevValues, 9))
+    if (sudokuSolver.isSolved()){
+      this.setState({
+        puzzleState: PuzzleState.Done
+      });
+    }
   }
 
   changeEditMode(){
@@ -183,6 +191,8 @@ class App extends React.Component {
   }
 
   checkPuzzleState(){
+    console.log('current puzzle state : ', this.state.puzzleState)
+
     if (this.state.puzzleState == PuzzleState.Invalid){
       return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
     } else if (this.state.puzzleState == PuzzleState.Done){
