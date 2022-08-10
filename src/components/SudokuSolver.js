@@ -1,8 +1,16 @@
 import Utils from './Utils.js'
+import { PuzzleState } from '../App.js';
+
 
 class SudokuSolver{
 constructor(grid){
     this.grid = grid;
+    this.setPossibilitiesFromGrid();
+    //console.log("possibilities :" + this.possibilities)
+    //console.log("grid" + this.grid)
+}
+
+setPossibilitiesFromGrid(){
     this.possibilities = JSON.parse(JSON.stringify(this.grid))
     for (var x = 0; x < this.possibilities.length; x++){
         for (var y = 0; y < this.possibilities.length; y++){
@@ -12,8 +20,6 @@ constructor(grid){
                 this.possibilities[x][y] = [this.grid[x][y]]
         }
     }
-    //console.log("possibilities :" + this.possibilities)
-    //console.log("grid" + this.grid)
 }
 
 getSquareFromIndex(x, y){
@@ -114,16 +120,21 @@ eliminate(){
     }
 }
 
+/// Return if puzzle stay valid or not
 keepOnePossibility(){
     for(var x = 0; x < this.possibilities.length; x++){
         for (var y = 0; y < this.possibilities[x].length; y++){
             if (this.possibilities[x][y].length == 1){
                 //console.log(this.possibilities[x][y][0], "is the only possibilty at ", x, ", ", y);
                 this.grid[x][y] = this.possibilities[x][y][0]
+            } else if (this.possibilities[x][y].length == 0){
+                return false;
             }
             // TODO: detect error when this.possibilities[x][y].length == 0 mean puzzle is wrong
         }
     }
+    this.eliminate();
+    return true;
 }
 
 getFirstPossibility(){
@@ -146,7 +157,7 @@ nakedTwinHint(){
         var histo = Utils.getHisto(this.possibilities[x])
         for (const [key, value] of Object.entries(histo)){
             if (histo[key] == 2 && key.length == 2){
-                console.log('naked twins detected line :', key, " at x :", x);
+                //console.log('naked twins detected line :', key, " at x :", x);
                 for (var y = 0; y < this.possibilities[x].length; y++){
                     if (key == Utils.stringRepOfArray(this.possibilities[x][y]))
                         result.push({x, y})
@@ -162,7 +173,7 @@ nakedTwinHint(){
         var histo = Utils.getHisto(cols)
         for (const [key, value] of Object.entries(histo)){
             if (histo[key] == 2 && key.length == 2){
-                console.log('naked twins detected cols :', key, ' at y: ', y);
+                //console.log('naked twins detected cols :', key, ' at y: ', y);
                 for (var x = 0; x < this.possibilities.length; x++){
                     if (key == Utils.stringRepOfArray(this.possibilities[x][y]))
                         result.push({x, y})
@@ -179,7 +190,7 @@ nakedTwinHint(){
             const histo2 = Utils.getHisto(block)
             for (const [key,value] of Object.entries(histo2)){ 
                 if (histo2[key] == 2 && key.length == 2){
-                console.log('naked twins detected block :', key, ' at x: ', x, ' at y: ', y);
+                //console.log('naked twins detected block :', key, ' at x: ', x, ' at y: ', y);
                     for (var {x, y} of this.getBlock(x, y)){
                         if (key == Utils.stringRepOfArray(this.possibilities[x][y]))
                             result.push({x, y})
@@ -193,14 +204,14 @@ nakedTwinHint(){
 }
 
 nakedTwin(){
-    console.log('naked twins')
+    //console.log('naked twins')
     /// by line
     for (var x = 0; x < this.possibilities.length; x++)
     {
         var histo = Utils.getHisto(this.possibilities[x])
         for (const [key, value] of Object.entries(histo)){
             if (histo[key] == 2 && key.length == 2){
-                console.log('naked twins detected line :', key, " at x :", x);
+                //console.log('naked twins detected line :', key, " at x :", x);
                 for (var y = 0; y < this.possibilities[x].length; y++){
                     //console.log('at x:', x, ' and y:', y, ' it is the naked twin by line : ', key)
                     if (key != Utils.stringRepOfArray(this.possibilities[x][y]))
@@ -209,6 +220,7 @@ nakedTwin(){
             }
         }
     }
+    this.keepOnePossibility();
     
     /// by columns
     for (var y = 0; y < this.possibilities.length; y++){
@@ -216,7 +228,7 @@ nakedTwin(){
         var histo = Utils.getHisto(cols)
         for (const [key, value] of Object.entries(histo)){
             if (histo[key] == 2 && key.length == 2){
-                console.log('naked twins detected cols :', key, ' at y: ', y);
+                //console.log('naked twins detected cols :', key, ' at y: ', y);
                 for (var x = 0; x < this.possibilities.length; x++){
                     if (key != Utils.stringRepOfArray(this.possibilities[x][y])){
                         this.possibilities[x][y] = this.possibilities[x][y].filter(elt => Utils.arrayRepOfString(key).includes(elt) == false);
@@ -226,6 +238,8 @@ nakedTwin(){
         }
     }
 
+    this.keepOnePossibility();
+
     /// by blocks
     for (var x = 0; x < this.possibilities.length; x += 3){
         for (var y = 0; y < this.possibilities.length; y += 3){
@@ -233,7 +247,7 @@ nakedTwin(){
             const histo2 = Utils.getHisto(block)
             for (const [key,value] of Object.entries(histo2)){ 
                 if (histo2[key] == 2 && key.length == 2){
-                console.log('naked twins detected block :', key, ' at x: ', x, ' at y: ', y);
+                //console.log('naked twins detected block :', key, ' at x: ', x, ' at y: ', y);
                     for (var {x, y} of this.getBlock(x, y)){
                         if (key != Utils.stringRepOfArray(this.possibilities[x][y])){
                             this.possibilities[x][y] = this.possibilities[x][y].filter(elt => Utils.arrayRepOfString(key).includes(elt) == false);
@@ -243,17 +257,33 @@ nakedTwin(){
             }
         }
     }
+
+    this.keepOnePossibility();
     //console.log("startX : ", startX, " startY :", startY);
 
 }
 
 
-lastPossibility(){
-    for(var x = 0; x < this.possibilities.length; x += 3){
-        for (var y = 0; y < this.possibilities[x].length; y += 3){
-            
+isEmptyCellLeft(){
+    for (var x = 0; x < this.grid.length; x++){
+        for (var y = 0; y < this.grid[x].length; y++){
+            if (this.grid[x][y] == null){
+                return true;
+            }
         }
     }
+    return false;
+}
+
+isFillCellLeft(){
+    for (var x = 0; x < this.grid.length; x++){
+        for (var y = 0; y < this.grid[x].length; y++){
+            if (this.grid[x][y] != null){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 isSolved(){
@@ -291,39 +321,122 @@ hint(){
     
 }
 
+
+cleanGrid(){
+    this.grid = Utils.convertArrayToMatrix(Array(81).fill(null), 9);
+    this.setPossibilitiesFromGrid();
+}
+
+fillGrid(){
+    // step 1: pick a random cell and place a random number wich is possible
+    // step 2: check if sudoku is currently solvable, if not go back to step 1
+    while(this.isSolved() == false){
+        this.cleanGrid();
+        while(this.isEmptyCellLeft()){
+        let x = Utils.getRandomInt(0, 8);
+        let y = Utils.getRandomInt(0, 8);
+        // find a empty cell
+        while (this.grid[x][y] != null){
+            x = Utils.getRandomInt(0, 8);
+            y = Utils.getRandomInt(0, 8);
+        }
+        // pick random a possibity of this cell
+        const randPossibility = Utils.getRandomInt(0, this.possibilities[x][y].length - 1);
+        this.grid[x][y] = this.possibilities[x][y][randPossibility];
+        console.log('begin solve')
+        const validity = this.solve();
+        console.log('end to solve')
+        if (validity == PuzzleState.Invalid)
+            break;
+        }
+    }
+}
+
+generateSudoku(){
+    // Clean grid and possibilities
+    this.cleanGrid();
+
+    
+
+    // STEP 1: fill grid with a valid solved puzzle
+    this.fillGrid();
+
+    // STEP 2: Remove number and check each time if sudoku stay solvable
+    let prevValue = null;
+
+    var tempGrid = Utils.deepCopyMatrix(this.grid);
+    console.log('tempgrid', tempGrid);
+    console.log('grid', this.grid);
+
+    let x = 0
+    let y = 0
+    var countRemove = 0;
+    var puzzleState = this.solve();
+    while(puzzleState == PuzzleState.Solved)
+    {
+        if(countRemove == 80)
+            break;
+        x = Utils.getRandomInt(0, 8);
+        y = Utils.getRandomInt(0, 8);
+        while (tempGrid[x][y] == null)
+        {
+            x = Utils.getRandomInt(0, 8);
+            y = Utils.getRandomInt(0, 8);
+        }
+        prevValue = tempGrid[x][y];
+        tempGrid[x][y] = null;
+        countRemove++;
+        console.log('number of removal : ', countRemove)
+        this.grid = Utils.deepCopyMatrix(tempGrid);
+        this.setPossibilitiesFromGrid();
+        puzzleState = this.solve();
+    }
+
+    tempGrid[x][y] = prevValue;
+    this.grid = Utils.deepCopyMatrix(tempGrid);
+    this.setPossibilitiesFromGrid();
+}
+
+
+/// Constraint propagation algorithm
 solve(){
+    console.log('try to solve with :', this.grid);
     let prevGrid = [[null]];
+    let isValidPuzzle = true;
     var numberOfPass = 0;
     while (this.isSolved() == false)
     {
-        while(this.isSolved() == false && Utils.areSameMatrix(prevGrid, this.grid) == false){
-            prevGrid = JSON.parse(JSON.stringify(this.grid));
-            this.eliminate();
-            this.keepOnePossibility();
+        while(this.isSolved() == false && Utils.areSameMatrix3D(prevGrid, this.possibilities) == false && isValidPuzzle){
+            prevGrid = JSON.parse(JSON.stringify(this.possibilities));
+            isValidPuzzle = this.keepOnePossibility();
             numberOfPass++;
         }
-        if (this.isSolved())
+        if (this.isSolved() || isValidPuzzle == false)
         {
             break;
         }
         else{
-
             if (numberOfPass > 100){
                 break;
             }
             this.nakedTwin();
             this.keepOnePossibility();
-            if (Utils.areSameMatrix(prevGrid, this.grid))
+            if (Utils.areSameMatrix3D(prevGrid, this.possibilities))
                 break;
         }
     }
-    if (this.isSolved() == false){
-        console.log("couldn't solve the current puzzle");
-    } else {
-        console.log("puzzle solved !");
+    if (isValidPuzzle == false){
+        console.log("invalid");
+        return PuzzleState.Invalid;
     }
-    console.log("With number of pass ", numberOfPass);
-    
+    else if (this.isSolved() == false){
+        console.log("undone");
+        return PuzzleState.Undone;
+    } else {
+        console.log("solved");
+    }
+    //console.log("With number of pass ", numberOfPass);
+    return PuzzleState.Solved;
 }
 
 }

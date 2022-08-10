@@ -7,7 +7,7 @@ import Utils from './components/Utils.js'
   const PuzzleState = {
     Undone: 'undone',
     Invalid: 'invalid',
-    Done: 'valid'
+    Solved: 'solved'
   }
 
   const EditMode = {
@@ -69,7 +69,7 @@ class App extends React.Component {
     const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(items, 9))
     if (sudokuSolver.isSolved()){
       this.setState({
-          puzzleState: PuzzleState.Done
+          puzzleState: PuzzleState.Solved
         })
     } else {
       this.setState({
@@ -90,7 +90,7 @@ class App extends React.Component {
   }
 
   solve(){
-    if (this.state.puzzleState != PuzzleState.Done)
+    if (this.state.puzzleState != PuzzleState.Solved)
     {
       const grid = Utils.convertArrayToMatrix(this.state.values, 9)
       const sudokuSolver = new SudokuSolver(grid)
@@ -110,7 +110,7 @@ class App extends React.Component {
         })
       } else{
         this.setState({
-          puzzleState: PuzzleState.Done,
+          puzzleState: PuzzleState.Solved,
         })
       }
     }
@@ -134,7 +134,11 @@ class App extends React.Component {
   /// Generate a new sudoku
   /// TODO: Add generation with level of difficulty
   newSudoku(){
-    return null;
+    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.values, 9));
+    sudokuSolver.generateSudoku();
+    this.setState({
+      values: Utils.convertMatrixToArray(sudokuSolver.grid)
+    });
   }
 
   /// Clean all the grid
@@ -162,7 +166,7 @@ class App extends React.Component {
     const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.prevValues, 9))
     if (sudokuSolver.isSolved()){
       this.setState({
-        puzzleState: PuzzleState.Done
+        puzzleState: PuzzleState.Solved
       });
     }
   }
@@ -195,7 +199,7 @@ class App extends React.Component {
 
     if (this.state.puzzleState == PuzzleState.Invalid){
       return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
-    } else if (this.state.puzzleState == PuzzleState.Done){
+    } else if (this.state.puzzleState == PuzzleState.Solved){
       return <p style={{color: "green"}}>Puzzle solved !</p>;
     }
     else {
@@ -245,4 +249,4 @@ class App extends React.Component {
 }
 
 export default App;
-export {EditMode};
+export {EditMode, PuzzleState};
