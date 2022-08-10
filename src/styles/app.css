@@ -120,3 +120,13 @@ input:focus {
     font-size: calc(3vw + 10px);
   }
 }
+
+@media screen and (max-width: 500px){
+   ul {
+    grid-template-columns: repeat(9, 8vw);
+    grid-template-rows: repeat(9, 8vw);
+    margin: 0 0 6vw;
+    font-size: calc(5vw + 10px);
+  }  
+  
+}
