@@ -343,9 +343,7 @@ fillGrid(){
         // pick random a possibity of this cell
         const randPossibility = Utils.getRandomInt(0, this.possibilities[x][y].length - 1);
         this.grid[x][y] = this.possibilities[x][y][randPossibility];
-        console.log('begin solve')
         const validity = this.solve();
-        console.log('end to solve')
         if (validity == PuzzleState.Invalid)
             break;
         }
@@ -365,8 +363,6 @@ generateSudoku(){
     let prevValue = null;
 
     var tempGrid = Utils.deepCopyMatrix(this.grid);
-    console.log('tempgrid', tempGrid);
-    console.log('grid', this.grid);
 
     let x = 0
     let y = 0
@@ -386,7 +382,6 @@ generateSudoku(){
         prevValue = tempGrid[x][y];
         tempGrid[x][y] = null;
         countRemove++;
-        console.log('number of removal : ', countRemove)
         this.grid = Utils.deepCopyMatrix(tempGrid);
         this.setPossibilitiesFromGrid();
         puzzleState = this.solve();
@@ -400,7 +395,6 @@ generateSudoku(){
 
 /// Constraint propagation algorithm
 solve(){
-    console.log('try to solve with :', this.grid);
     let prevGrid = [[null]];
     let isValidPuzzle = true;
     var numberOfPass = 0;
@@ -426,17 +420,13 @@ solve(){
         }
     }
     if (isValidPuzzle == false){
-        console.log("invalid");
         return PuzzleState.Invalid;
     }
     else if (this.isSolved() == false){
-        console.log("undone");
         return PuzzleState.Undone;
     } else {
-        console.log("solved");
+        return PuzzleState.Solved;
     }
-    //console.log("With number of pass ", numberOfPass);
-    return PuzzleState.Solved;
 }
 
 }

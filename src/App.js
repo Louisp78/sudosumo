@@ -71,7 +71,7 @@ class App extends React.Component {
     this.setState({
           puzzleState: PuzzleState.Solved
         });
-      this.setState({displayConfetti: true});
+      this.setState({displayConfetti: true, solveDisplay:true});
       setTimeout(function() {
         this.setState({displayConfetti: false});
       }.bind(this), 5000);
@@ -125,12 +125,15 @@ class App extends React.Component {
 
 
   setGrid(newGrid){
+    console.log('set grid')
     this.setState({ 
         values: newGrid,
     });   
-    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.values,9));
+    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(newGrid,9));
     if (sudokuSolver.isSolved()){
       this.setPuzzleSolved();
+    } else {
+      this.setState({puzzleState: PuzzleState.Undone, solveDisplay: false});
     }
   }
 
@@ -161,7 +164,6 @@ class App extends React.Component {
   clean(){
     if (Utils.areSameArray(this.state.values, Array(81).fill(null)) == false)
     {
-      console.log('is cleaning');
       this.setState({
         displayUndoClean: true
       });
@@ -182,7 +184,6 @@ class App extends React.Component {
   }
 
   changeEditMode(){
-    console.log('here')
     if (this.state.editMode == EditMode.Pen)
     {
       this.setState({
@@ -196,7 +197,7 @@ class App extends React.Component {
   }
 
   checkPuzzleState(){
-    console.log('current puzzle state : ', this.state.puzzleState)
+    //console.log('current puzzle state : ', this.state.puzzleState)
 
     if (this.state.puzzleState == PuzzleState.Invalid){
       return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
