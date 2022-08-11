@@ -3,6 +3,7 @@ import SudokuGrid from './components/SudokuGrid';
 import React from 'react';
 import SudokuSolver from './components/SudokuSolver.js'
 import Utils from './components/Utils.js'
+import ReactConfetti from 'react-confetti';
 
   const PuzzleState = {
     Undone: 'undone',
@@ -19,12 +20,15 @@ class App extends React.Component {
 
   constructor(props){
     super(props); 
+    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(Array(81).fill(null), 9));
+    sudokuSolver.generateSudoku();
     this.state = {
-      values: this.props.current != null ? Utils.convertMatrixToArray(this.props.current) : Array(81).fill(null),
+      values: Utils.convertMatrixToArray(sudokuSolver.grid),
       puzzleState: PuzzleState.Undone,
       editMode: EditMode.Pen,
       displayUndoClean: false,
-      currentNumber: 1
+      displayConfetti: false,
+      currentNumber: 1,
     }
   }
   nextNumber(){
@@ -53,6 +57,26 @@ class App extends React.Component {
     }
   }
 
+  setNumber(number){
+    if (number > 9 || number < 1){
+      throw new RangeError('number must be between 1 and 9 inclusive');
+    }
+    this.setState({
+      currentNumber: number
+    });
+  }
+
+
+  setPuzzleSolved(){
+    this.setState({
+          puzzleState: PuzzleState.Solved
+        });
+      this.setState({displayConfetti: true});
+      setTimeout(function() {
+        this.setState({displayConfetti: false});
+      }.bind(this), 5000);
+  }
+
   handleClick(index){
     this.resetCleanning();
 
@@ -63,20 +87,7 @@ class App extends React.Component {
     } else {
       items[index] = null;
     }
-    this.setState({values: items});
-
-    /// Set puzzle state
-    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(items, 9))
-    if (sudokuSolver.isSolved()){
-      this.setState({
-          puzzleState: PuzzleState.Solved
-        })
-    } else {
-      this.setState({
-          puzzleState: PuzzleState.Undone
-        })
-    }
-
+    this.setGrid(items);
   }
 
 
@@ -99,22 +110,28 @@ class App extends React.Component {
       
       const pos = Utils.convertMatrixToArray(sudokuSolver.possibilities);
 
-      console.log(pos);
+      this.setGrid(pos);
       this.setState({
-        values: pos,
         prevValues: Utils.convertMatrixToArray(sudokuSolver.grid),
         solveDisplay: true});
       if (sudokuSolver.isSolved() == false){
         this.setState({
           puzzleState: PuzzleState.Invalid,
         })
-      } else{
-        this.setState({
-          puzzleState: PuzzleState.Solved,
-        })
       }
     }
 
+  }
+
+
+  setGrid(newGrid){
+    this.setState({ 
+        values: newGrid,
+    });   
+    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.values,9));
+    if (sudokuSolver.isSolved()){
+      this.setPuzzleSolved();
+    }
   }
 
   hint(){
@@ -124,9 +141,7 @@ class App extends React.Component {
       console.log(grid)
       sudokuSolver.hint();
       const newGrid = Utils.convertMatrixToArray(sudokuSolver.grid);
-      this.setState({ 
-        values: newGrid,
-      });
+      this.setGrid(newGrid);
     }
   }
 
@@ -137,8 +152,9 @@ class App extends React.Component {
     const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.values, 9));
     sudokuSolver.generateSudoku();
     this.setState({
-      values: Utils.convertMatrixToArray(sudokuSolver.grid)
+      puzzleState: PuzzleState.Undone,
     });
+    this.setGrid(Utils.convertMatrixToArray(sudokuSolver.grid));
   }
 
   /// Clean all the grid
@@ -159,16 +175,10 @@ class App extends React.Component {
 
   /// Undo the previous cleaning
   undoClean(){
+    this.setGrid(this.state.prevValues);
     this.setState({
-      values: this.state.prevValues,
       displayUndoClean: false
     });
-    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.prevValues, 9))
-    if (sudokuSolver.isSolved()){
-      this.setState({
-        puzzleState: PuzzleState.Solved
-      });
-    }
   }
 
   changeEditMode(){
@@ -185,6 +195,27 @@ class App extends React.Component {
     }
   }
 
+  checkPuzzleState(){
+    console.log('current puzzle state : ', this.state.puzzleState)
+
+    if (this.state.puzzleState == PuzzleState.Invalid){
+      return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
+    } else if (this.state.puzzleState == PuzzleState.Solved){
+
+      return <p style={{color: "green"}}>Puzzle solved !</p>;
+    }
+    else {
+      return null;
+    }
+  }
+
+  renderConfetti(){
+    if (this.state.displayConfetti)
+      return <ReactConfetti tweenDuration={5000} />;
+    else
+      return null;
+  }
+
   renderEditMode(){
     var content = ""
     if (this.state.editMode == EditMode.Pen)
@@ -192,19 +223,6 @@ class App extends React.Component {
     else
       content = "Switch to pen";
     return content;
-  }
-
-  checkPuzzleState(){
-    console.log('current puzzle state : ', this.state.puzzleState)
-
-    if (this.state.puzzleState == PuzzleState.Invalid){
-      return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
-    } else if (this.state.puzzleState == PuzzleState.Solved){
-      return <p style={{color: "green"}}>Puzzle solved !</p>;
-    }
-    else {
-      return null;
-    }
   }
 
   renderCleanning(){
@@ -215,23 +233,44 @@ class App extends React.Component {
     }
   }
 
-
+  renderNumberGrid(){
+      if (this.state.editMode == EditMode.Pen){
+      var grid = Array.from(Array(9).fill(1), (elt,index) => elt + index)
+      grid = grid.map((elt) => {
+        if (elt == this.state.currentNumber){
+          return <div key={elt} className='selected'>{elt}</div>
+        } else {
+          return <div key={elt} className='unselected' onClick={() => this.setNumber(elt)}>{elt}</div>
+        }
+      });
+      return (
+        <div className='numberGrid'>
+          {grid}
+        </div>
+      );
+    }
+      return null;
+  }
 
   render(){
   return (
     <div className="App">
       <div className="game">
+        {this.renderConfetti()} 
         <div className='titleContainer'>
-        <h1>SudoSumo 🍜</h1>
+          <h1>SudoSumo 🍜</h1>
         </div>
-        <SudokuGrid 
-        values={this.state.values} 
-        currentNumber={this.state.currentNumber}
-        handleClick={(i) => this.handleClick(i)}
-        onScrollUp={() => this.nextNumber()}
-        onScrollDown={() => this.prevNumber()}
-        editMode={this.state.editMode}
-        />
+        <div className='wrapperSudokuGrid'>
+          <SudokuGrid 
+          values={this.state.values} 
+          currentNumber={this.state.currentNumber}
+          handleClick={(i) => this.handleClick(i)}
+          onScrollUp={() => this.nextNumber()}
+          onScrollDown={() => this.prevNumber()}
+          editMode={this.state.editMode}
+          />
+          {this.renderNumberGrid()}
+        </div>
         <div className='containerOptions'>
           {this.checkPuzzleState()}
           <div className='options'>
