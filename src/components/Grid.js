@@ -2,10 +2,9 @@ import React from 'react'
 import Box from './Box.js'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
 
-class SudokuGrid extends React.Component {
+class Grid extends React.Component {
 
 renderSquare(i){
-
     const isLock = this.props.startValues[i] !== null;
     return <Box
                 key={i} 
@@ -20,7 +19,7 @@ renderSquare(i){
 renderBoard(){
     const items = this.props.values;
     let board = []
-    for (var i = 0; i < items.length; i++){
+    for (let i = 0; i < items.length; i++){
         board.push(this.renderSquare(i));
     }
     return board;
@@ -45,4 +44,4 @@ render(){
 
 }
 
-export default SudokuGrid;
+export default Grid;

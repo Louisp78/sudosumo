@@ -16,8 +16,8 @@ test('array rep of string v2', () => {
 });
 
 test('test histogram', () => {
-    expect(Utils.getHisto([[1, 2], [1, 2], [4], [5]])).toStrictEqual({'12': 2, '4': 1, '5': 1});
-    expect(Utils.getHisto([[5]])).toStrictEqual({'5': 1});
+    expect(Utils.getHistogramArrayPossibilities([[1, 2], [1, 2], [4], [5]])).toStrictEqual({'12': 2, '4': 1, '5': 1});
+    expect(Utils.getHistogramArrayPossibilities([[5]])).toStrictEqual({'5': 1});
 });
 
 test('random generation', () => {
