@@ -1,34 +1,48 @@
 import React from "react";
 import {EditMode} from "../App.js"
+
+const BoxStyle = {
+    rubber: {
+        backgroundColor: "red",
+        textDecoration: "line-through"
+    },
+    pen: {
+        color: "darkgrey",
+        backgroundColor: "ghostwhite"
+    },
+    penValidate: {
+        backgroundColor: "lightgreen"
+    },
+    locked: {
+        backgroundColor: "grey",
+        cursor: "not-allowed",
+        color: "wheat",
+    },
+}
+
 class Box extends React.Component {
 
     constructor(props){
         super(props);
         this.state = {
             displayHover: false,
-            cliked: false,
-            value: this.props.value,
+            clicked: false,
             style: {}
         }
     }
 
+
     onMouseEnter(){
-        if (this.props.editMode == EditMode.Pen)
+        if (this.props.editMode === EditMode.Pen)
         {
             this.setState({
             displayHover: true,
-            style: {
-                color: "darkgrey",
-                backgroundColor: "ghostwhite"
-            }
+            style: BoxStyle.penValidate
         });
         } else {
             this.setState({
                 displayHover: false,
-                style: {
-                    backgroundColor: "red",
-                    textDecoration: "line-through"
-                }
+                style: BoxStyle.rubber
             })
         }
     }
@@ -38,23 +52,21 @@ class Box extends React.Component {
             displayHover: false,
             style: {}
         })
-        if (this.state.cliked){
+        if (this.state.clicked){
             this.props.onClick();
             this.setState({
-                cliked: false,
+                clicked: false,
             })
         }
     }
 
     onClick(){
         this.setState({
-            cliked: true
+            clicked: true
         })
-        if (this.props.editMode == EditMode.Pen){
+        if (this.props.editMode === EditMode.Pen){
             this.setState({
-                style: {
-                    backgroundColor: "lightgreen"
-                }
+                style: BoxStyle.penValidate,
             });
         } else {
             this.setState({
@@ -63,7 +75,6 @@ class Box extends React.Component {
                 }
             })
         }
-
     }
 
     renderContent(){
@@ -78,14 +89,15 @@ class Box extends React.Component {
 
     render(){
             return (
-                <li 
-                style={this.state.style}
-                onMouseEnter={(e) => this.onMouseEnter()} 
-                onMouseLeave={(e) => this.onMouseLeave()}
-                onClick={(e) => this.onClick()}
+                <li
+                    style={this.props.isLock ? BoxStyle.locked : this.state.style}
+                    onMouseEnter={ this.props.isLock ? null : (e) => this.onMouseEnter()}
+                    onMouseLeave={ this.props.isLock ? null : (e) => this.onMouseLeave()}
+                    onClick={ this.props.isLock ? null : (e) => this.onClick()}
                 >{this.renderContent()}</li>
             );
     }
+
 }
 
 export default Box
