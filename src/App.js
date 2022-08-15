@@ -81,7 +81,7 @@ class App extends React.Component {
     this.resetCleanning();
 
     const items = this.state.values.slice()
-    if (this.state.editMode == EditMode.Pen)
+    if (this.state.editMode === EditMode.Pen)
     {
       items[index] = this.state.currentNumber;
     } else {
@@ -101,7 +101,7 @@ class App extends React.Component {
   }
 
   solve(){
-    if (this.state.puzzleState != PuzzleState.Solved)
+    if (this.state.puzzleState !== PuzzleState.Solved)
     {
       const grid = Utils.convertArrayToMatrix(this.state.values, 9)
       const sudokuSolver = new SudokuSolver(grid)
@@ -114,7 +114,7 @@ class App extends React.Component {
       this.setState({
         prevValues: Utils.convertMatrixToArray(sudokuSolver.grid),
         solveDisplay: true});
-      if (sudokuSolver.isSolved() == false){
+      if (sudokuSolver.isSolved() === false){
         this.setState({
           puzzleState: PuzzleState.Invalid,
         })
@@ -138,7 +138,7 @@ class App extends React.Component {
   }
 
   hint(){
-    if (this.state.puzzleState == PuzzleState.Undone){
+    if (this.state.puzzleState === PuzzleState.Undone){
       const grid = Utils.convertArrayToMatrix(this.state.values, 9)
       const sudokuSolver = new SudokuSolver(grid)
       console.log(grid)
@@ -162,7 +162,7 @@ class App extends React.Component {
 
   /// Clean all the grid
   clean(){
-    if (Utils.areSameArray(this.state.values, Array(81).fill(null)) == false)
+    if (Utils.areSameArray(this.state.values, Array(81).fill(null)) === false)
     {
       this.setState({
         displayUndoClean: true
@@ -184,7 +184,7 @@ class App extends React.Component {
   }
 
   changeEditMode(){
-    if (this.state.editMode == EditMode.Pen)
+    if (this.state.editMode === EditMode.Pen)
     {
       this.setState({
         editMode: EditMode.Rubber
@@ -199,9 +199,9 @@ class App extends React.Component {
   checkPuzzleState(){
     //console.log('current puzzle state : ', this.state.puzzleState)
 
-    if (this.state.puzzleState == PuzzleState.Invalid){
+    if (this.state.puzzleState === PuzzleState.Invalid){
       return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
-    } else if (this.state.puzzleState == PuzzleState.Solved){
+    } else if (this.state.puzzleState === PuzzleState.Solved){
 
       return <p style={{color: "green"}}>Puzzle solved !</p>;
     }
@@ -219,7 +219,7 @@ class App extends React.Component {
 
   renderEditMode(){
     var content = ""
-    if (this.state.editMode == EditMode.Pen)
+    if (this.state.editMode === EditMode.Pen)
       content = "Switch to rubber";
     else
       content = "Switch to pen";
@@ -235,10 +235,10 @@ class App extends React.Component {
   }
 
   renderNumberGrid(){
-      if (this.state.editMode == EditMode.Pen){
+      if (this.state.editMode === EditMode.Pen){
       var grid = Array.from(Array(9).fill(1), (elt,index) => elt + index)
       grid = grid.map((elt) => {
-        if (elt == this.state.currentNumber){
+        if (elt === this.state.currentNumber){
           return <div key={elt} className='selected'>{elt}</div>
         } else {
           return <div key={elt} className='unselected' onClick={() => this.setNumber(elt)}>{elt}</div>
