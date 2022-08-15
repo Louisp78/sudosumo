@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import {shallow} from 'enzyme';
-import SudokuSolver from './components/SudokuSolver';
+import Solver from './components/Solver';
 import Utils from './components/Utils';
 
 /*test('renders learn react link', () => {
@@ -33,7 +33,7 @@ test('sudoku 1 level 1', () => {
     [4, 1, 3, 9, 8, 7, 2, 6, 5],
     [2, 5, 6, 3, 4, 1, 9, 7, 8]
 ]
-  const sudokuSolver = new SudokuSolver(s1)
+  const sudokuSolver = new Solver(s1)
   sudokuSolver.solve();
 
 
@@ -58,7 +58,7 @@ test('sudoku solved level 1', () => {
     [1, null, null, null, 4, 6, 5, null, null],
     [null, null, null, 5, null, null, null, 3, null]
   ];
-  const sudokuSolver = new SudokuSolver(su);
+  const sudokuSolver = new Solver(su);
   sudokuSolver.solve()
   expect(sudokuSolver.isSolved())
 })

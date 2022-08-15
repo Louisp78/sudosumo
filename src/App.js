@@ -1,9 +1,10 @@
 import './styles/app.css';
-import SudokuGrid from './components/SudokuGrid';
+import Grid from './components/Grid';
 import React from 'react';
-import SudokuSolver from './components/SudokuSolver.js'
+import Solver from './components/Solver.js'
 import Utils from './components/Utils.js'
 import ReactConfetti from 'react-confetti';
+import UtilsGrid from "./components/UtilsGrid";
 
   const PuzzleState = {
     Undone: 'undone',
@@ -32,8 +33,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(Array(81).fill(null), 9));
+    const sudokuSolver = new Solver(Utils.convertArrayToMatrix(Array(81).fill(null), 9));
     sudokuSolver.generateSudoku();
+
     this.setState({
       startValues: Utils.convertMatrixToArray(sudokuSolver.grid)
     });
@@ -113,7 +115,7 @@ class App extends React.Component {
     if (this.state.puzzleState !== PuzzleState.Solved)
     {
       const grid = Utils.convertArrayToMatrix(this.state.values, 9)
-      const sudokuSolver = new SudokuSolver(grid)
+      const sudokuSolver = new Solver(grid)
 
       const newPuzzleState = sudokuSolver.solve();
       
@@ -130,8 +132,8 @@ class App extends React.Component {
 
 
   setGrid(newGrid){
-    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(newGrid,9));
-    const newPuzzleState = sudokuSolver.isSolved();
+    const sudokuSolver = new Solver(Utils.convertArrayToMatrix(newGrid,9));
+    const newPuzzleState = UtilsGrid.isSolved(sudokuSolver.grid);
     console.log('setGrid: ' + newPuzzleState);
     this.setState({
       values: newGrid,
@@ -143,10 +145,11 @@ class App extends React.Component {
     }
   }
 
+  // TODO: Implement an hint system
   hint(){
     if (this.state.puzzleState === PuzzleState.Undone){
       const grid = Utils.convertArrayToMatrix(this.state.values, 9)
-      const sudokuSolver = new SudokuSolver(grid)
+      const sudokuSolver = new Solver(grid)
       console.log(grid)
       sudokuSolver.hint();
       const newGrid = Utils.convertMatrixToArray(sudokuSolver.grid);
@@ -158,7 +161,7 @@ class App extends React.Component {
   /// Generate a new sudoku
   /// TODO: Add generation with level of difficulty
   newSudoku(){
-    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.values, 9));
+    const sudokuSolver = new Solver(Utils.convertArrayToMatrix(this.state.values, 9));
     sudokuSolver.generateSudoku();
     this.setState({
         startValues: Utils.convertMatrixToArray(sudokuSolver.grid)
@@ -204,7 +207,6 @@ class App extends React.Component {
 
   checkPuzzleState(){
     //console.log('current puzzle state : ', this.state.puzzleState)
-
     if (this.state.puzzleState === PuzzleState.Invalid){
       return <p style={{color: "red"}}>There is an error somewhere.</p>
     } else if (this.state.puzzleState === PuzzleState.Solved){
@@ -268,7 +270,8 @@ class App extends React.Component {
           <h1>SudoSumo 🍜</h1>
         </div>
         <div className='wrapperSudokuGrid'>
-          <SudokuGrid 
+
+          <Grid
           values={this.state.values}
           startValues={this.state.startValues}
           currentNumber={this.state.currentNumber}
