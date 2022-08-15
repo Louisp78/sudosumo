@@ -20,10 +20,9 @@ class App extends React.Component {
 
   constructor(props){
     super(props); 
-    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(Array(81).fill(null), 9));
-    sudokuSolver.generateSudoku();
     this.state = {
-      values: Utils.convertMatrixToArray(sudokuSolver.grid),
+      values: Array(81).fill(null),
+      startValues: Array(81).fill(null),
       puzzleState: PuzzleState.Undone,
       editMode: EditMode.Pen,
       displayUndoClean: false,
@@ -31,6 +30,17 @@ class App extends React.Component {
       currentNumber: 1,
     }
   }
+
+  componentDidMount() {
+    const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(Array(81).fill(null), 9));
+    sudokuSolver.generateSudoku();
+    this.setState({
+      startValues: Utils.convertMatrixToArray(sudokuSolver.grid)
+    });
+
+    this.setGrid(Utils.convertMatrixToArray(sudokuSolver.grid));
+  }
+
   nextNumber(){
     const currentNumber = this.state.currentNumber;
     if (currentNumber + 1 > 9){
@@ -78,7 +88,7 @@ class App extends React.Component {
   }
 
   handleClick(index){
-    this.resetCleanning();
+    this.resetCleaning();
 
     const items = this.state.values.slice()
     if (this.state.editMode === EditMode.Pen)
@@ -91,7 +101,7 @@ class App extends React.Component {
   }
 
 
-  resetCleanning(){
+  resetCleaning(){
     if (this.state.displayUndoClean)
     {
       this.setState({
@@ -125,15 +135,14 @@ class App extends React.Component {
 
 
   setGrid(newGrid){
-    console.log('set grid')
-    this.setState({ 
+    this.setState({
         values: newGrid,
     });   
     const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(newGrid,9));
     if (sudokuSolver.isSolved()){
       this.setPuzzleSolved();
     } else {
-      this.setState({puzzleState: PuzzleState.Undone, solveDisplay: false});
+      this.setState({puzzleState: PuzzleState.Undone});
     }
   }
 
@@ -155,7 +164,7 @@ class App extends React.Component {
     const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(this.state.values, 9));
     sudokuSolver.generateSudoku();
     this.setState({
-      puzzleState: PuzzleState.Undone,
+        startValues: Utils.convertMatrixToArray(sudokuSolver.grid)
     });
     this.setGrid(Utils.convertMatrixToArray(sudokuSolver.grid));
   }
@@ -218,7 +227,7 @@ class App extends React.Component {
   }
 
   renderEditMode(){
-    var content = ""
+    let content = "";
     if (this.state.editMode === EditMode.Pen)
       content = "Switch to rubber";
     else
@@ -226,7 +235,7 @@ class App extends React.Component {
     return content;
   }
 
-  renderCleanning(){
+  renderCleaning(){
     if (this.state.displayUndoClean){
       return <button onClick={(e) => this.undoClean()}>Undo clean</button>
     } else {
@@ -236,8 +245,8 @@ class App extends React.Component {
 
   renderNumberGrid(){
       if (this.state.editMode === EditMode.Pen){
-      var grid = Array.from(Array(9).fill(1), (elt,index) => elt + index)
-      grid = grid.map((elt) => {
+        let grid = Array.from(Array(9).fill(1), (elt, index) => elt + index);
+        grid = grid.map((elt) => {
         if (elt === this.state.currentNumber){
           return <div key={elt} className='selected'>{elt}</div>
         } else {
@@ -263,7 +272,8 @@ class App extends React.Component {
         </div>
         <div className='wrapperSudokuGrid'>
           <SudokuGrid 
-          values={this.state.values} 
+          values={this.state.values}
+          startValues={this.state.startValues}
           currentNumber={this.state.currentNumber}
           handleClick={(i) => this.handleClick(i)}
           onScrollUp={() => this.nextNumber()}
@@ -276,7 +286,7 @@ class App extends React.Component {
           {this.checkPuzzleState()}
           <div className='options'>
             <button onClick={(e) => this.newSudoku()}>New sudoku</button>
-            {this.renderCleanning()}
+            {this.renderCleaning()}
             <button onClick={() => this.changeEditMode()}>{this.renderEditMode()}</button>
             <button onClick={(e) => this.solve()}>Solve</button>
             <button onClick={(e) => this.hint()}>Hint</button>

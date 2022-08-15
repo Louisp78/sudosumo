@@ -5,21 +5,14 @@ import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
 class SudokuGrid extends React.Component {
 
 renderSquare(i){
-    /*const x = Math.floor(i / 9);    
-    const y = i % 9;
-    const hint = this.props.hint;
-    if (hint != null && hint.includes({x: x, y: y})){
-        console.log('here is the hint');
-        return <Box number={this.state.currentNumber} key={i} value={this.props.values[i]} onClick={() => this.props.handleClick(i)}/>;
-    }
-    else{
-        return <Box number={this.state.currentNumber} key={i} value={this.props.values[i]} onClick={() => this.props.handleClick(i)}/>;
-    }*/
-    return <Box 
+
+    const isLock = this.props.startValues[i] !== null;
+    return <Box
                 key={i} 
                 value={this.props.values[i]}
                 number={this.props.currentNumber}
                 editMode={this.props.editMode}
+                isLock={isLock}
                 onClick={() => this.props.handleClick(i)}
                 />;
 }
