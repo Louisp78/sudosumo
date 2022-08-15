@@ -39,7 +39,7 @@ getCols(y){
 }
 getLine(x){
     var result = []
-    for (var y = 0; y< this.possibilities.length; y++){
+    for (var y = 0; y < this.possibilities.length; y++){
         result.push({x, y})
     }
     return result;
@@ -288,23 +288,39 @@ isFillCellLeft(){
 
 isSolved(){
     const gridArr = Utils.convertMatrixToArray(this.grid);
-    if (gridArr.includes(null) != false){
-        return false;
+    if (gridArr.includes(null) !== false){
+        return PuzzleState.Undone;
     }
-    for (var x = 0; x < this.grid.length; x++){
-        if (this.grid[x].length != new Set(this.grid[x]).size)
-            return false;
-        
+    for (let x = 0; x < this.grid.length; x++){
+        console.log('a line on the grid :', this.grid[x]);
+        if (Utils.hasDuplicates(this.grid[x])){
+            return PuzzleState.Invalid;
+        }
     }
-    for (var y = 0; y < 9; y++){
+    for (let y = 0; y < this.grid.length; y++){
         let tmpCol = []
-        for (var x = 0; x < this.grid.length; x++){
+        for (let x = 0; x < this.grid.length; x++){
             tmpCol.push(this.grid[x][y])
         }
-        if (tmpCol.length != new Set(tmpCol).size)
-            return false;
+        if (Utils.hasDuplicates(tmpCol)){
+            return PuzzleState.Invalid;
+        }
     }
-    return true;
+
+    for (let x = 0; x < this.grid.length; x += 3){
+        for (let y = 0; y < this.grid.length; y += 3){
+            let tmpBlock = []
+            for (let i = 0; i < 3; i++){
+                for (let j = 0; j < 3; j++){
+                    tmpBlock.push(this.grid[x + i][y + j])
+                }
+            }
+            if (Utils.hasDuplicates(tmpBlock)){
+                return PuzzleState.Invalid;
+            }
+        }
+    }
+    return PuzzleState.Solved;
 }
 
 hint(){
@@ -330,7 +346,7 @@ cleanGrid(){
 fillGrid(){
     // step 1: pick a random cell and place a random number wich is possible
     // step 2: check if sudoku is currently solvable, if not go back to step 1
-    while(this.isSolved() == false){
+    while(this.isSolved() === PuzzleState.Undone){
         this.cleanGrid();
         while(this.isEmptyCellLeft()){
         let x = Utils.getRandomInt(0, 8);
@@ -398,14 +414,14 @@ solve(){
     let prevGrid = [[null]];
     let isValidPuzzle = true;
     var numberOfPass = 0;
-    while (this.isSolved() == false)
+    while (this.isSolved() === PuzzleState.Undone)
     {
-        while(this.isSolved() == false && Utils.areSameMatrix3D(prevGrid, this.possibilities) == false && isValidPuzzle){
+        while(this.isSolved() === PuzzleState.Undone && Utils.areSameMatrix3D(prevGrid, this.possibilities) === false && isValidPuzzle){
             prevGrid = JSON.parse(JSON.stringify(this.possibilities));
             isValidPuzzle = this.keepOnePossibility();
             numberOfPass++;
         }
-        if (this.isSolved() || isValidPuzzle == false)
+        if (this.isSolved() === PuzzleState.Solved || isValidPuzzle === false)
         {
             break;
         }
@@ -419,13 +435,11 @@ solve(){
                 break;
         }
     }
-    if (isValidPuzzle == false){
+    if (isValidPuzzle === false){
         return PuzzleState.Invalid;
     }
-    else if (this.isSolved() == false){
-        return PuzzleState.Undone;
-    } else {
-        return PuzzleState.Solved;
+    else {
+        return this.isSolved();
     }
 }
 

@@ -78,13 +78,11 @@ class App extends React.Component {
 
 
   setPuzzleSolved(){
-    this.setState({
-          puzzleState: PuzzleState.Solved
-        });
-      this.setState({displayConfetti: true, solveDisplay:true});
-      setTimeout(function() {
-        this.setState({displayConfetti: false});
-      }.bind(this), 5000);
+    console.log('puzzle solved');
+    this.setState({displayConfetti: true});
+    setTimeout(function() {
+      this.setState({displayConfetti: false});
+    }.bind(this), 5000);
   }
 
   handleClick(index){
@@ -94,9 +92,10 @@ class App extends React.Component {
     if (this.state.editMode === EditMode.Pen)
     {
       items[index] = this.state.currentNumber;
-    } else {
+    } else if (this.state.editMode === EditMode.Rubber) {
       items[index] = null;
     }
+    console.log('handleClick');
     this.setGrid(items);
   }
 
@@ -105,7 +104,7 @@ class App extends React.Component {
     if (this.state.displayUndoClean)
     {
       this.setState({
-        displayUndoClean: false,
+        displayUndoClean: false
       });
     }
   }
@@ -116,33 +115,31 @@ class App extends React.Component {
       const grid = Utils.convertArrayToMatrix(this.state.values, 9)
       const sudokuSolver = new SudokuSolver(grid)
 
-      sudokuSolver.solve();
+      const newPuzzleState = sudokuSolver.solve();
       
-      const pos = Utils.convertMatrixToArray(sudokuSolver.possibilities);
-
+      const pos = Utils.convertMatrixToArray(sudokuSolver.grid);
       this.setGrid(pos);
-      this.setState({
-        prevValues: Utils.convertMatrixToArray(sudokuSolver.grid),
-        solveDisplay: true});
-      if (sudokuSolver.isSolved() === false){
-        this.setState({
-          puzzleState: PuzzleState.Invalid,
-        })
-      }
-    }
 
+      this.setState({
+        puzzleState: newPuzzleState
+      });
+
+
+    }
   }
 
 
   setGrid(newGrid){
-    this.setState({
-        values: newGrid,
-    });   
     const sudokuSolver = new SudokuSolver(Utils.convertArrayToMatrix(newGrid,9));
-    if (sudokuSolver.isSolved()){
+    const newPuzzleState = sudokuSolver.isSolved();
+    console.log('setGrid: ' + newPuzzleState);
+    this.setState({
+      values: newGrid,
+      puzzleState: newPuzzleState,
+    });
+    if (newPuzzleState === PuzzleState.Solved)
+    {
       this.setPuzzleSolved();
-    } else {
-      this.setState({puzzleState: PuzzleState.Undone});
     }
   }
 
@@ -171,14 +168,14 @@ class App extends React.Component {
 
   /// Clean all the grid
   clean(){
-    if (Utils.areSameArray(this.state.values, Array(81).fill(null)) === false)
+    if (Utils.areSameArray(this.state.values, this.state.startValues) === false)
     {
       this.setState({
         displayUndoClean: true
       });
     }
     this.setState({
-      values: Array(81).fill(null),
+      values: this.state.startValues,
       prevValues: this.state.values,
       puzzleState: PuzzleState.Undone
     })
@@ -209,7 +206,7 @@ class App extends React.Component {
     //console.log('current puzzle state : ', this.state.puzzleState)
 
     if (this.state.puzzleState === PuzzleState.Invalid){
-      return <p style={{color: "red"}}>This puzzle is invalid or could not be solved.</p>
+      return <p style={{color: "red"}}>There is an error somewhere.</p>
     } else if (this.state.puzzleState === PuzzleState.Solved){
 
       return <p style={{color: "green"}}>Puzzle solved !</p>;

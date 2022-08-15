@@ -85,6 +85,10 @@ class Utils {
         return newMatrix;
     }
 
+    static hasDuplicates(array){
+        return new Set(array).size !== array.length;
+    }
+
 
 
 
