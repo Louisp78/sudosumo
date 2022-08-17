@@ -39,7 +39,7 @@ class UtilsGrid {
         return false;
     }
 
-    static isSolved(grid, possibilities){
+    static isSolved(grid , possibilities){
 
         if (Utils.convertMatrixToArray(possibilities).filter(elt => elt.length === 0).length > 0)
             return PuzzleState.Invalid;
