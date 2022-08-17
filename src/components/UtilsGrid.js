@@ -6,7 +6,7 @@ class UtilsGrid {
 
     /// Set the matrix of possibilities from the grid
     static getPossibilitiesFromGrid(grid){
-        var possibilities = JSON.parse(JSON.stringify(grid));
+        var possibilities = Utils.convertArrayToMatrix(Array(81).fill(null), 9);
         for (let x = 0; x < possibilities.length; x++){
             for (let y = 0; y < possibilities.length; y++){
                 if (grid[x][y] == null)
@@ -39,13 +39,16 @@ class UtilsGrid {
         return false;
     }
 
-    static isSolved(grid){
+    static isSolved(grid, possibilities){
+
+        if (Utils.convertMatrixToArray(possibilities).filter(elt => elt.length === 0).length > 0)
+            return PuzzleState.Invalid;
+
         const gridArr = Utils.convertMatrixToArray(grid);
         if (gridArr.includes(null) !== false){
             return PuzzleState.Undone;
         }
         for (let x = 0; x < grid.length; x++){
-            console.log('a line on the grid :', grid[x]);
             if (Utils.hasDuplicates(grid[x])){
                 return PuzzleState.Invalid;
             }
@@ -109,6 +112,22 @@ class UtilsGrid {
             }
         }
         return result;
+    }
+
+    static gridArrayToString(grid){
+        return grid.map(elt => elt === null ? "." : elt.toString()).join("");
+    }
+
+    static gridToString(grid){
+        return grid.map(subArr => subArr.map(elt => elt === null ? "." : elt.toString()).join("")).join("");
+    }
+
+    static stringToGridArray(string){
+        return string.split("").map(elt => elt === "." ? null : parseInt(elt));
+    }
+
+    static stringToGrid(string){
+         return Utils.convertArrayToMatrix(this.stringToGridArray(string), 9);
     }
 }
 
