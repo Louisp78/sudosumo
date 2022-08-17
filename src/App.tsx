@@ -1,7 +1,7 @@
 import './styles/app.css';
 import Grid from './components/Grid';
 import React from 'react';
-import Solver from './components/Solver.js'
+import Solver from './components/Solver.ts'
 import Utils from './components/Utils.js'
 import ReactConfetti from 'react-confetti';
 import UtilsGrid from "./components/UtilsGrid";
