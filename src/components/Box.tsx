@@ -1,5 +1,5 @@
 import React from "react";
-import {EditMode} from "../App.tsx"
+import {EditMode} from "../App";
 
 const BoxStyle = {
     rubber: {
@@ -20,9 +20,24 @@ const BoxStyle = {
     },
 }
 
-class Box extends React.Component {
+type Props = {
+    key: number,
+    value: number | null,
+    number: number,
+    editMode: EditMode,
+    isLock: boolean,
+    onClick: () => void,
+}
 
-    constructor(props){
+type State = {
+    displayHover: boolean,
+    clicked: boolean,
+    style: any,
+}
+
+class Box extends React.Component<Props, State> {
+
+    constructor(props : Props){
         super(props);
         this.state = {
             displayHover: false,
@@ -91,9 +106,9 @@ class Box extends React.Component {
             return (
                 <li
                     style={this.props.isLock ? BoxStyle.locked : this.state.style}
-                    onMouseEnter={ this.props.isLock ? null : (e) => this.onMouseEnter()}
-                    onMouseLeave={ this.props.isLock ? null : (e) => this.onMouseLeave()}
-                    onClick={ this.props.isLock ? null : (e) => this.onClick()}
+                    onMouseEnter={ this.props.isLock ? undefined : (e) => this.onMouseEnter()}
+                    onMouseLeave={ this.props.isLock ? undefined : (e) => this.onMouseLeave()}
+                    onClick={ this.props.isLock ? undefined : (e) => this.onClick()}
                 >{this.renderContent()}</li>
             );
     }

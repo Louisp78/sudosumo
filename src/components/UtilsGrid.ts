@@ -1,11 +1,12 @@
 /// Class only for utils functions for solver
 import Utils from "./Utils";
 import {PuzzleState} from "../App";
+import {CoordinateType, GridArrayType, GridMatrixType, PossibilitiesType} from "./Type";
 
 class UtilsGrid {
 
     /// Set the matrix of possibilities from the grid
-    static getPossibilitiesFromGrid(grid){
+    static getPossibilitiesFromGrid(grid : GridMatrixType) : PossibilitiesType {
         var possibilities = Utils.convertArrayToMatrix(Array(81).fill(null), 9);
         for (let x = 0; x < possibilities.length; x++){
             for (let y = 0; y < possibilities.length; y++){
@@ -17,7 +18,7 @@ class UtilsGrid {
         }
         return possibilities;
     }
-    static isEmptyCellLeft(grid){
+    static isEmptyCellLeft(grid : GridMatrixType) : boolean {
         for (let x = 0; x < grid.length; x++){
             for (let y = 0; y < grid[x].length; y++){
                 if (grid[x][y] == null){
@@ -28,7 +29,7 @@ class UtilsGrid {
         return false;
     }
 
-    static isFilledCellLeft(grid){
+    static isFilledCellLeft(grid : GridMatrixType) : boolean {
         for (let x = 0; x < grid.length; x++){
             for (let y = 0; y < grid[x].length; y++){
                 if (grid[x][y] != null){
@@ -39,13 +40,13 @@ class UtilsGrid {
         return false;
     }
 
-    static isSolved(grid , possibilities){
+    static isSolved(grid : GridMatrixType , possibilities : PossibilitiesType) : PuzzleState {
 
         if (Utils.convertMatrixToArray(possibilities).filter(elt => elt.length === 0).length > 0)
             return PuzzleState.Invalid;
 
         const gridArr = Utils.convertMatrixToArray(grid);
-        if (gridArr.includes(null) !== false){
+        if (gridArr.includes(null)){
             return PuzzleState.Undone;
         }
         for (let x = 0; x < grid.length; x++){
@@ -79,7 +80,8 @@ class UtilsGrid {
         return PuzzleState.Solved;
     }
 
-    static getSquareFromIndex(x, y){
+    static getSquareFromIndex(x : number, y : number) : {startX : number, startY : number}
+    {
         const valueX = x % 3
         const valueY = y % 3
         const startX = x - valueX
@@ -87,14 +89,16 @@ class UtilsGrid {
         return {startX, startY}
     }
     
-    static getColumn(possibilities, y){
+    static getColumn(possibilities : PossibilitiesType, y : number) : Array<CoordinateType>
+    {
         const result = [];
         for (let x = 0; x < possibilities.length; x++){
             result.push({x, y})
         }
         return result;
     }
-    static getLine(possibilities, x){
+    static getLine(possibilities : PossibilitiesType, x : number) : Array<CoordinateType>
+    {
         const result = [];
         for (let y = 0; y < possibilities.length; y++){
             result.push({x, y})
@@ -102,7 +106,8 @@ class UtilsGrid {
         return result;
     }
 
-    static getBlock(x, y){
+    static getBlock(x: number, y: number) : Array<CoordinateType>
+    {
         const result = [];
         const {startX, startY} = this.getSquareFromIndex(x, y);
         for (let xBis = startX; xBis <= startX + 2; xBis++)
@@ -114,19 +119,19 @@ class UtilsGrid {
         return result;
     }
 
-    static gridArrayToString(grid){
+    static gridArrayToString(grid : GridArrayType) : string {
         return grid.map(elt => elt === null ? "." : elt.toString()).join("");
     }
 
-    static gridToString(grid){
+    static gridMatrixToString(grid : GridMatrixType) : string {
         return grid.map(subArr => subArr.map(elt => elt === null ? "." : elt.toString()).join("")).join("");
     }
 
-    static stringToGridArray(string){
+    static stringToGridArray(string : string) : GridArrayType{
         return string.split("").map(elt => elt === "." ? null : parseInt(elt));
     }
 
-    static stringToGrid(string){
+    static stringToGridMatrix(string : string) : GridMatrixType{
          return Utils.convertArrayToMatrix(this.stringToGridArray(string), 9);
     }
 }
