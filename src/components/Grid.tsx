@@ -1,10 +1,23 @@
 import React from 'react'
-import Box from './Box.js'
+import Box from './Box'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
+import {EditMode} from "../App";
 
-class Grid extends React.Component {
+type Props = {
+    values: Array<number | null>,
+    startValues: Array<number | null>,
+    currentNumber: number,
+    handleClick: (i : number) => void,
+    onScrollUp: () => void,
+    onScrollDown: () => void,
+    editMode: EditMode,
+}
 
-renderSquare(i){
+type State = never;
+
+class Grid extends React.Component<Props, State> {
+
+renderSquare(i : number) : JSX.Element {
     const isLock = this.props.startValues[i] !== null;
     return <Box
                 key={i} 
@@ -16,9 +29,9 @@ renderSquare(i){
                 />;
 }
 
-renderBoard(){
+renderBoard() : Array<JSX.Element> {
     const items = this.props.values;
-    let board = []
+    let board : Array<JSX.Element> = []
     for (let i = 0; i < items.length; i++){
         board.push(this.renderSquare(i));
     }

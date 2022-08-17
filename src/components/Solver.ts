@@ -1,19 +1,25 @@
-import Utils from './Utils.js'
-import {PuzzleState} from '../App.js';
+import Utils from './Utils'
+import {PuzzleState} from '../App';
 import UtilsGrid from "./UtilsGrid";
+import {CoordinateType, GridMatrixType, PossibilitiesType} from "./Type";
 
 
-const StrategyState = {
-    Worked: 'worked',
-    NotWorked: 'notWorked'
+enum StrategyState {
+    Worked,
+    NotWorked,
 }
 
 
 /// Possibilities array is an array of arrays of possibilities
 /// If a value is null in it, it means it is found in the grid
 class Solver {
-    constructor(grid) {
+    public grid: GridMatrixType;
+    public possibilities: PossibilitiesType;
+    private score: number;
+
+    constructor(grid: GridMatrixType) {
         this.grid = grid;
+        this.score = 0;
         this.possibilities = UtilsGrid.getPossibilitiesFromGrid(grid);
     }
 
@@ -46,7 +52,7 @@ class Solver {
     }
 
 
-    removePossibilityFromIndex(number, x, y) {
+    removePossibilityFromIndex(number: number, x: number, y: number) {
         this.possibilities[x][y] = [number];
         /// line
         for (let yBis = 0; yBis < this.possibilities[x].length; yBis++) {
@@ -89,9 +95,13 @@ class Solver {
 /// Return if puzzle stay valid or not
 
 /// This function can detect last digit and naked single
-    lastDigit() {
+    lastDigit(): StrategyState {
         this.eliminate();
-        var strategyState = StrategyState.NotWorked;
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 5;
+
         for (let x = 0; x < this.possibilities.length; x++) {
             for (let y = 0; y < this.possibilities[x].length; y++) {
                 if (this.possibilities[x][y].length === 1 && this.grid[x][y] == null) {
@@ -106,9 +116,13 @@ class Solver {
     }
 
 /// This function detect hidden single when a digit appears once in the possibilities arrays of a square, column or line
-    hiddenSingle() {
+    hiddenSingle(): StrategyState {
         this.eliminate();
-        var strategyState = StrategyState.NotWorked;
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 10;
+
         // line
         for (let x = 0; x < this.possibilities.length; x++) {
             const currentLine = UtilsGrid.getLine(this.possibilities, x).map(elt => this.possibilities[x][elt.y]);
@@ -158,136 +172,205 @@ class Solver {
 
     }
 
-    nakedPairs() {
-        var strategyState = StrategyState.NotWorked;
-        /// by line
-        for (let x = 0; x < this.possibilities.length; x++) {
-            const histogram = Utils.getHistogramArrayPossibilities(this.possibilities[x])
-            for (const [key, value] of Object.entries(histogram)) {
-                if (value === 2 && key.length === 2) {
-                    const pairs = Utils.arrayRepOfString(key);
-                    for (let y = 0; y < this.possibilities[x].length; y++) {
-                        if (key !== Utils.stringRepOfArray(this.possibilities[x][y])){
-                            const lengthInitial = this.possibilities[x][y].length;
-                            this.possibilities[x][y] = this.possibilities[x][y]
-                                .filter(elt => elt !== pairs[0] && elt !== pairs[1]);
-                            if (this.possibilities[x][y].length < lengthInitial) {
-                                strategyState = StrategyState.Worked;
-                            }
+
+    /// From array of coordinates, remove all possibilities from array of values
+    /// Values correspond to a pair, triplet or quad of numbers
+    removePossibilitiesFromPair(coords: Array<CoordinateType>, pairingLength: number): StrategyState {
+
+        let strategyState = StrategyState.NotWorked;
+
+        const coordsVal = coords.map(elt => this.possibilities[elt.x][elt.y]);
+        const histogram = Utils.getHistogramOfPairing(coordsVal)
+        for (const [key, value] of Object.entries(histogram)) {
+            if (value === pairingLength && key.length === pairingLength) {
+                const pairs = Utils.arrayRepOfString(key);
+                //let countVal = 0;
+                for (const coordinate of coords) {
+                    const x = coordinate.x;
+                    const y = coordinate.y;
+                    if (Utils.getArrayCombination23(pairs).some(elt => Utils.areSameArray(this.possibilities[x][y], elt)) /*&&
+                        countVal < pairingLength*/) {
+                        //countVal += 1;
+                    } else {
+                        const lengthInitial = this.possibilities[x][y].length;
+                        this.possibilities[x][y] = this.possibilities[x][y]
+                            .filter(elt => !pairs.includes(elt));
+                        if (this.possibilities[x][y].length < lengthInitial) {
+                            strategyState = StrategyState.Worked;
                         }
                     }
                 }
+            }
+        }
+        return strategyState;
+    }
+
+    nakedPairs(): StrategyState {
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 15;
+
+        /// by line
+        for (let x = 0; x < this.possibilities.length; x++) {
+            const line = UtilsGrid.getLine(this.possibilities, x);
+            if (this.removePossibilitiesFromPair(line, 2) === StrategyState.Worked) {
+                strategyState = StrategyState.Worked;
             }
         }
 
         /// by columns
         for (let y = 0; y < this.possibilities.length; y++) {
-            const cols = UtilsGrid.getColumn(this.possibilities, y).map(elt => this.possibilities[elt.x][y])
-            const histogram = Utils.getHistogramArrayPossibilities(cols);
-            for (const [key, value] of Object.entries(histogram)) {
-                if (value === 2 && key.length === 2) {
-                    const pairs = Utils.arrayRepOfString(key);
-                    for (let x = 0; x < this.possibilities.length; x++) {
-                        if (key !== Utils.stringRepOfArray(this.possibilities[x][y])) {
-                            const lengthInitial = this.possibilities[x][y].length;
-                            this.possibilities[x][y] = this.possibilities[x][y]
-                                .filter(elt => elt !== pairs[0] && elt !== pairs[1]);
-                            if (this.possibilities[x][y].length < lengthInitial) {
-                                strategyState = StrategyState.Worked;
-                            }
-                        }
-                    }
-                }
+            const colsIndex = UtilsGrid.getColumn(this.possibilities, y);
+            if (this.removePossibilitiesFromPair(colsIndex, 2) === StrategyState.Worked) {
+                strategyState = StrategyState.Worked;
             }
         }
 
         /// by blocks
-        for (var x = 0; x < this.possibilities.length; x += 3) {
-            for (var y = 0; y < this.possibilities.length; y += 3) {
-                const block = UtilsGrid.getBlock(x, y).map((elt) => this.possibilities[elt.x][elt.y]);
-                const histogram = Utils.getHistogramArrayPossibilities(block)
-                for (const [key, value] of Object.entries(histogram)) {
-                    if (value === 2 && key.length === 2) {
-                        const pairs = Utils.arrayRepOfString(key);
-                        for (var coords of UtilsGrid.getBlock(x, y)) {
-                            const xBis = coords.x;
-                            const yBis = coords.y;
-                            if (key !== Utils.stringRepOfArray(this.possibilities[xBis][yBis])) {
-                                const lengthInitial = this.possibilities[xBis][yBis].length;
-                                this.possibilities[xBis][yBis] = this.possibilities[xBis][yBis]
-                                    .filter(elt => elt !== pairs[0] && elt !== pairs[1]);
-                                if (this.possibilities[xBis][yBis].length < lengthInitial) {
-                                    strategyState = StrategyState.Worked;
-                                }
-                            }
-                        }
-                    }
+        for (let x = 0; x < this.possibilities.length; x += 3) {
+            for (let y = 0; y < this.possibilities.length; y += 3) {
+                const blockIndex = UtilsGrid.getBlock(x, y);
+                if (this.removePossibilitiesFromPair(blockIndex, 2) === StrategyState.Worked) {
+                    strategyState = StrategyState.Worked;
                 }
             }
         }
 
         return strategyState;
-
     }
 
-    hiddenPairs() {
+    hiddenPairs(): StrategyState {
         // TODO: Implement this function
-        var strategyState = StrategyState.NotWorked;
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 20;
+
         return strategyState;
     }
 
-    nakedTriplets() {
-        // TODO: Implement this function
-        var strategyState = StrategyState.NotWorked;
+    nakedTriplets(): StrategyState {
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 40;
+
+        /// Line
+        for (let x = 0; x < this.possibilities.length; x++) {
+            const line = UtilsGrid.getLine(this.possibilities, x);
+            if (this.removePossibilitiesFromPair(line, 3) === StrategyState.Worked) {
+                strategyState = StrategyState.Worked;
+            }
+        }
+        /// Column
+        for (let y = 0; y < this.possibilities.length; y++) {
+            const colsIndex = UtilsGrid.getColumn(this.possibilities, y);
+            if (this.removePossibilitiesFromPair(colsIndex, 3) === StrategyState.Worked) {
+                strategyState = StrategyState.Worked;
+            }
+        }
+        /// Block
+        for (let x = 0; x < this.possibilities.length; x += 3) {
+            for (let y = 0; y < this.possibilities.length; y += 3) {
+                const blockIndex = UtilsGrid.getBlock(x, y);
+                if (this.removePossibilitiesFromPair(blockIndex, 3) === StrategyState.Worked) {
+                    strategyState = StrategyState.Worked;
+                }
+            }
+        }
+
         return strategyState;
     }
 
-    hiddenTriplets() {
+    hiddenTriplets(): StrategyState {
         // TODO: Implement this function
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 45;
+
+        return strategyState;
     }
 
-    nakedQuadruplets() {
-        // TODO: Implement this function
+    nakedQuadruplets(): StrategyState {
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 60;
+
+        /// Line
+        for (let x = 0; x < this.possibilities.length; x++) {
+            const line = UtilsGrid.getLine(this.possibilities, x);
+            if (this.removePossibilitiesFromPair(line, 4) === StrategyState.Worked) {
+                strategyState = StrategyState.Worked;
+            }
+        }
+        /// Column
+        for (let y = 0; y < this.possibilities.length; y++) {
+            const colsIndex = UtilsGrid.getColumn(this.possibilities, y);
+            if (this.removePossibilitiesFromPair(colsIndex, 4) === StrategyState.Worked) {
+                strategyState = StrategyState.Worked;
+            }
+        }
+        /// Block
+        for (let x = 0; x < this.possibilities.length; x += 3) {
+            for (let y = 0; y < this.possibilities.length; y += 3) {
+                const blockIndex = UtilsGrid.getBlock(x, y);
+                if (this.removePossibilitiesFromPair(blockIndex, 4) === StrategyState.Worked) {
+                    strategyState = StrategyState.Worked;
+                }
+            }
+        }
+        return strategyState;
     }
 
-    hiddenQuadruplets() {
+    hiddenQuadruplets(): StrategyState {
         // TODO: Implement this function
+        let strategyState = StrategyState.NotWorked;
+
+        // set score
+        this.score += 65;
+
+        return strategyState;
     }
 
 
-/// Constraint propagation algorithm
-    solve() {
+    /// Constraint propagation algorithm
+    /// Each time this function is called, the score of the sudoku is set
+    solve(): PuzzleState {
+        // reset score
+        this.score = 0;
         // Call eliminate() mostly for generateSudoku()
         let numberOfPass = 0;
 
-        const strategies = Array.of(() => this.lastDigit(), () => this.hiddenSingle(),() => this.nakedPairs() /*,this.hiddenPairs, this.nakedTriplets, this.hiddenTriplets, this.nakedQuadruplets, this.hiddenQuadruplets*/);
-        var indexStrategy = 0;
+        let strategies = Array.of(() => this.lastDigit(), () => this.hiddenSingle(), () => this.nakedPairs(), () => this.nakedTriplets());
+        let indexStrategy = 0;
         let isStrategyWorkedAtLeastOnce = false;
         let strategyState = StrategyState.Worked;
 
         while (UtilsGrid.isSolved(this.grid, this.possibilities) === PuzzleState.Undone) {
             strategyState = StrategyState.Worked;
             isStrategyWorkedAtLeastOnce = false;
-            while (strategyState === StrategyState.Worked && UtilsGrid.isSolved(this.grid, this.possibilities) === PuzzleState.Undone)
-            {
+            while (strategyState === StrategyState.Worked && UtilsGrid.isSolved(this.grid, this.possibilities) === PuzzleState.Undone) {
                 strategyState = strategies[indexStrategy]();
                 if (strategyState === StrategyState.Worked)
                     isStrategyWorkedAtLeastOnce = true;
             }
-            if (indexStrategy === strategies.length - 1 && !isStrategyWorkedAtLeastOnce){
+            if (indexStrategy === strategies.length - 1 && !isStrategyWorkedAtLeastOnce) {
                 break;
             }
-             if (isStrategyWorkedAtLeastOnce === true)
-             {
-                    if (indexStrategy === 0){
-                        indexStrategy = 1;
-                    } else {
-                        indexStrategy = 0;
-                    }
+            this.score *= 1.5;
+            if (isStrategyWorkedAtLeastOnce) {
+                if (indexStrategy === 0) {
+                    indexStrategy = 1;
+                } else {
+                    indexStrategy = 0;
+                }
                 // If the current strategy didn't work, we must select the next strategy.
-             } else {
-                 indexStrategy += 1;
-             }
+            } else {
+                indexStrategy += 1;
+            }
         }
         return UtilsGrid.isSolved(this.grid, this.possibilities);
     }
@@ -299,7 +382,7 @@ class Solver {
     }
 
     /// Get array of all possible coordinates left
-    getArrayOfAllCoords() {
+    getArrayOfAllCoords(): Array<CoordinateType> {
         const arrayOfCoords = [];
         for (let x = 0; x < this.grid.length; x++) {
             for (let y = 0; y < this.grid.length; y++) {
@@ -315,7 +398,6 @@ class Solver {
         // step 1: pick a random cell and place a random number which is possible
         // step 2: check if sudoku is currently solvable, if not go back to step 1
 
-
         while (UtilsGrid.isSolved(this.grid, this.possibilities) !== PuzzleState.Solved) {
             this.cleanGrid();
             while (UtilsGrid.isEmptyCellLeft(this.grid)) {
@@ -324,9 +406,6 @@ class Solver {
                 const {x, y} = allIndex[ind];
                 // pick random a possibility of this cell
                 const randPossibility = Utils.getRandomInt(0, this.possibilities[x][y].length - 1);
-                if (this.possibilities[x][y][randPossibility] === undefined) {
-                    throw new TypeError('possibility is undefined for x: ' + x + ' y: ' + y + " with randPossibility: " + randPossibility + " and possibilities: " + this.possibilities[x][y].toString());
-                }
                 this.grid[x][y] = this.possibilities[x][y][randPossibility];
                 this.eliminate();
 
@@ -338,23 +417,57 @@ class Solver {
         }
     }
 
-    generateSudoku() {
-        // Clean grid and possibilities
+    /// Generate sudoku v 2.0
+    gen2(minScore: number = 0) {
+        let saveGrid : GridMatrixType = [[]];
+        while (UtilsGrid.isSolved(this.grid, this.possibilities) !== PuzzleState.Solved || this.score < minScore) {
+            this.cleanGrid();
+            while (UtilsGrid.isEmptyCellLeft(this.grid) && UtilsGrid.isSolved(this.grid, this.possibilities) !== PuzzleState.Solved) {
+                const allIndex = this.getArrayOfAllCoords();
+                let ind = Utils.getRandomInt(0, allIndex.length - 1);
+                const {x, y} = allIndex[ind];
+                // pick random a possibility of this cell
+                const randPossibility = Utils.getRandomInt(0, this.possibilities[x][y].length - 1);
+                this.grid[x][y] = this.possibilities[x][y][randPossibility];
+                this.eliminate();
+
+                saveGrid = Utils.deepCopyMatrix(this.grid);
+
+                const validity = this.solve();
+                console.log('validity :', validity);
+                if (validity === PuzzleState.Invalid)
+                    break;
+            }
+        }
+        this.grid = saveGrid;
+    }
+
+
+    /// Get the score of difficulty of the current sudoku
+    getScore(): number {
+        // Set the score
+        this.solve();
+
+        return this.score;
+    }
+
+    /// Clean grid and possibilities
+    /// STEP 1: fill grid with a valid solved puzzle
+    /// STEP 2: Remove number and check each time if sudoku stay solvable
+    generateSudoku()
+    {
         this.cleanGrid();
 
 
-        // STEP 1: fill grid with a valid solved puzzle
         this.fillGrid();
-        // STEP 2: Remove number and check each time if sudoku stay solvable
-        let prevValue = null;
+        let prevValue: number | null = null;
 
-        let tempGrid = Utils.deepCopyMatrix(this.grid);
+        let tempGrid: GridMatrixType = Utils.deepCopyMatrix(this.grid);
 
         let x = 0
         let y = 0
         let puzzleState = this.solve();
         while (puzzleState === PuzzleState.Solved) {
-            console.log("heho");
             x = Utils.getRandomInt(0, 8);
             y = Utils.getRandomInt(0, 8);
             while (tempGrid[x][y] == null) {
