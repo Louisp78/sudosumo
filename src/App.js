@@ -35,12 +35,11 @@ class App extends React.Component {
   componentDidMount() {
     const sudokuSolver = new Solver(Utils.convertArrayToMatrix(Array(81).fill(null), 9));
     sudokuSolver.generateSudoku();
-
     this.setState({
       startValues: Utils.convertMatrixToArray(sudokuSolver.grid)
     });
 
-    this.setGrid(Utils.convertMatrixToArray(sudokuSolver.grid));
+  this.setGrid(Utils.convertMatrixToArray(sudokuSolver.grid));
   }
 
   nextNumber(){
@@ -133,7 +132,7 @@ class App extends React.Component {
 
   setGrid(newGrid){
     const sudokuSolver = new Solver(Utils.convertArrayToMatrix(newGrid,9));
-    const newPuzzleState = UtilsGrid.isSolved(sudokuSolver.grid);
+    const newPuzzleState = UtilsGrid.isSolved(sudokuSolver.grid, sudokuSolver.possibilities);
     console.log('setGrid: ' + newPuzzleState);
     this.setState({
       values: newGrid,

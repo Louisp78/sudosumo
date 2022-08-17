@@ -15,9 +15,17 @@ test('array rep of string v2', () => {
     expect(Array.from('12').map(elt => parseInt(elt))).toStrictEqual([1, 2]);
 });
 
-test('test histogram', () => {
+test('test histogram array', () => {
     expect(Utils.getHistogramArrayPossibilities([[1, 2], [1, 2], [4], [5]])).toStrictEqual({'12': 2, '4': 1, '5': 1});
     expect(Utils.getHistogramArrayPossibilities([[5]])).toStrictEqual({'5': 1});
+});
+
+test('test histogram', () => {
+    const currentColumn = Array.of([1, 2], [1, 2], [4], [5]);
+    const histo = Utils.getHistogramPossibilities(currentColumn);
+    const index = currentColumn.findIndex(elt => elt.includes(parseInt('4')));
+    console.log(index, "currentColumn", currentColumn) ;
+    expect(histo).toStrictEqual({1: 2, 2: 2, 4: 1, 5: 1});
 });
 
 test('random generation', () => {
@@ -25,6 +33,8 @@ test('random generation', () => {
         const num = Utils.getRandomInt(1, 9);
         expect(num >= 1 && num <= 9).toBe(true);
     }
+    expect(Utils.getRandomInt(1, 1)).toBe(1);
+    expect(Utils.getRandomInt(0, 0)).toBe(0);
 })
 
 test('deep copy matrix', () => {
