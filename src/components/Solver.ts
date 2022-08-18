@@ -490,7 +490,7 @@ class Solver {
         }
         this.grid = saveGrid;
 
-        //this.setToMinimalGrid();
+        this.setToMinimalGrid();
     }
 
 
