@@ -1,7 +1,7 @@
-import Utils from "./components/Utils";
-import UtilsGrid from "./components/UtilsGrid";
-import Solver from "./components/Solver";
-import {PuzzleState} from "./App";
+import Utils from "../components/Utils";
+import UtilsGrid from "../components/UtilsGrid";
+import Solver from "../components/Solver";
+import {PuzzleState} from "../App";
 
 function testGrid(str){
     const grid = UtilsGrid.stringToGridMatrix(str);
@@ -59,3 +59,13 @@ test("generate puzzle", () => {
     sudokuSolver.generateSudoku();
     expect(UtilsGrid.isEmptyCellLeft(sudokuSolver.grid)).toBe(true);
 });
+
+
+test("generate puzzle 2", () => {
+    const sudokuSolver = new Solver( Utils.convertArrayToMatrix(Array(81).fill(null), 9));
+    sudokuSolver.gen2();
+    expect(UtilsGrid.isEmptyCellLeft(sudokuSolver.grid)).toBe(true);
+});
+
+
+

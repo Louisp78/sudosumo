@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import App from '../App';
 import {shallow} from 'enzyme';
-import Solver from './components/Solver';
-import Utils from './components/Utils';
+import Solver from '../components/Solver';
+import Utils from '../components/Utils';
 
 /*test('renders learn react link', () => {
   render(<App />);

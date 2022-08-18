@@ -5,12 +5,12 @@ import {CoordinateType, GridArrayType, GridMatrixType, PossibilitiesType} from "
 
 class UtilsGrid {
 
-    /// Set the matrix of possibilities from the grid
-    static getPossibilitiesFromGrid(grid : GridMatrixType) : PossibilitiesType {
+    /// Reset the matrix of possibilities from the grid
+    static resetPossibilitiesFromGrid(grid : GridMatrixType) : PossibilitiesType {
         var possibilities = Utils.convertArrayToMatrix(Array(81).fill(null), 9);
-        for (let x = 0; x < possibilities.length; x++){
-            for (let y = 0; y < possibilities.length; y++){
-                if (grid[x][y] == null)
+        for (let x = 0; x < grid.length; x++){
+            for (let y = 0; y < grid.length; y++){
+                if (grid[x][y] === null)
                     possibilities[x][y] = Array.from(Array(9).fill(1), (elt,index) => elt + index)
                 else
                     possibilities[x][y] = [grid[x][y]]
@@ -29,15 +29,16 @@ class UtilsGrid {
         return false;
     }
 
-    static isFilledCellLeft(grid : GridMatrixType) : boolean {
+    static countFilledCells(grid : GridMatrixType) : number {
+        let count = 0;
         for (let x = 0; x < grid.length; x++){
             for (let y = 0; y < grid[x].length; y++){
                 if (grid[x][y] != null){
-                    return true;
+                    count++;
                 }
             }
         }
-        return false;
+        return count;
     }
 
     static isSolved(grid : GridMatrixType , possibilities : PossibilitiesType) : PuzzleState {
