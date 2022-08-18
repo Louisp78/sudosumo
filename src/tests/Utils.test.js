@@ -1,4 +1,5 @@
-import Utils from './components/Utils.ts'
+import Utils from '../components/Utils.ts'
+import Solver from "../components/Solver";
 test('test string representation of array', () => {
     expect(Utils.stringRepOfArray([1, 2])).toBe('12');
     expect(Utils.stringRepOfArray([1])).toBe('1');
@@ -56,4 +57,20 @@ test('array combination' , () => {
     expect(Utils.getArrayCombination2([1, 2, 3])).toStrictEqual([[1, 2], [1, 3], [2, 3]]);
     expect(Utils.getArrayCombination2([2, 8 , 9])).toStrictEqual([[2, 8], [2, 9], [8, 9]]);
     expect(Utils.getArrayCombination23([2, 7 , 8, 9])).toStrictEqual([[2, 7], [2, 8], [2, 9], [7, 8], [7, 9], [8, 9], [2, 7, 8], [2, 7, 9], [2, 8, 9], [7, 8, 9]]);
+});
+
+test('array combination v2', () => {
+    console.log(Utils.getCombinations([1, 2, 3]));
+    expect(Utils.getCombinations([1, 2, 3])).toStrictEqual([[], [1, 2, 3], [1, 2], [1, 3], [1], [2, 3], [2], [3]]);
+    console.log(Utils.getCombinations([{x: 1, y: 1}, {x: 2, y: 2}, {x: 3, y: 3}]));
+    expect(true).toBe(true);
+});
+
+
+test('shuffle array', () => {
+    const solver = new Solver(Utils.convertArrayToMatrix(Array(81).fill(null), 9));
+    solver.generateSudoku();
+    const coords =solver.getArrayOfAllCoordsOfFilledCell() ;
+    console.log('coords', coords);
+    console.log(Utils.shuffleArray(coords));
 });

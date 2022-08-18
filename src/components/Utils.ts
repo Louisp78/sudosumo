@@ -157,6 +157,31 @@ class Utils {
         return new Set(array).size !== array.length;
     }
 
+
+    static getCombinations<TypeVal>(array : Array<TypeVal>) : Array<Array<TypeVal>> | undefined{
+        var fn = function (active : Array<TypeVal>, rest : Array<TypeVal>, a : Array<Array<TypeVal>>) {
+            if (active.length === 0 && rest.length === 0)
+                return;
+            if (rest.length === 0) {
+                a.push(active);
+            } else {
+                fn(active.concat([rest[0]]), rest.slice(1), a);
+                fn(active, rest.slice(1), a);
+            }
+            return a;
+        }
+        return fn([], array, [[]]);
+    }
+
+    /// Fisher-Yates shuffle
+    static shuffleArray<TypeVal>(array : Array<TypeVal>) : Array<TypeVal>{
+        for (let i = array.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
 }
 
 export default Utils

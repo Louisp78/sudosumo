@@ -20,7 +20,7 @@ class Solver {
     constructor(grid: GridMatrixType) {
         this.grid = grid;
         this.score = 0;
-        this.possibilities = UtilsGrid.getPossibilitiesFromGrid(grid);
+        this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(grid);
     }
 
 // FIXME: this function must be removed after Hint class is implemented
@@ -340,7 +340,7 @@ class Solver {
     /// Each time this function is called, the score of the sudoku is set
     solve(): PuzzleState {
         // reset score
-        this.score = 0;
+        this.score = (81 - UtilsGrid.countFilledCells(this.grid)) * 10;
         // Call eliminate() mostly for generateSudoku()
         let numberOfPass = 0;
 
@@ -360,7 +360,7 @@ class Solver {
             if (indexStrategy === strategies.length - 1 && !isStrategyWorkedAtLeastOnce) {
                 break;
             }
-            this.score *= 1.5;
+            this.score += 30;
             if (isStrategyWorkedAtLeastOnce) {
                 if (indexStrategy === 0) {
                     indexStrategy = 1;
@@ -378,15 +378,27 @@ class Solver {
 
     cleanGrid() {
         this.grid = Utils.convertArrayToMatrix(Array(81).fill(null), 9);
-        this.possibilities = UtilsGrid.getPossibilitiesFromGrid(this.grid);
+        this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
     }
 
     /// Get array of all possible coordinates left
-    getArrayOfAllCoords(): Array<CoordinateType> {
+    getArrayOfAllCoordsOfEmptyCell(): Array<CoordinateType> {
         const arrayOfCoords = [];
         for (let x = 0; x < this.grid.length; x++) {
             for (let y = 0; y < this.grid.length; y++) {
                 if (this.grid[x][y] === null) {
+                    arrayOfCoords.push({x, y});
+                }
+            }
+        }
+        return arrayOfCoords;
+    }
+
+    getArrayOfAllCoordsOfFilledCell(): Array<CoordinateType> {
+        const arrayOfCoords = [];
+        for (let x = 0; x < this.grid.length; x++) {
+            for (let y = 0; y < this.grid.length; y++) {
+                if (this.grid[x][y] !== null) {
                     arrayOfCoords.push({x, y});
                 }
             }
@@ -401,7 +413,7 @@ class Solver {
         while (UtilsGrid.isSolved(this.grid, this.possibilities) !== PuzzleState.Solved) {
             this.cleanGrid();
             while (UtilsGrid.isEmptyCellLeft(this.grid)) {
-                const allIndex = this.getArrayOfAllCoords();
+                const allIndex = this.getArrayOfAllCoordsOfEmptyCell();
                 let ind = Utils.getRandomInt(0, allIndex.length - 1);
                 const {x, y} = allIndex[ind];
                 // pick random a possibility of this cell
@@ -417,13 +429,50 @@ class Solver {
         }
     }
 
+    /// Get the solvable puzzle with the least number of filled cells
+    setToMinimalGrid() {
+        const initialGrid = Utils.deepCopyMatrix(this.grid);
+
+        let gridResult : GridMatrixType = initialGrid;
+        let countFilledCells : number = UtilsGrid.countFilledCells(this.grid);
+        let score = this.score;
+
+        let numberOfTry = 100;
+
+        // test each combination of filled cells and find the one with the least number of filled cells
+        while(numberOfTry > 0)
+        {
+            // get coordinates of all filled cells
+            const coords = Utils.shuffleArray(this.getArrayOfAllCoordsOfFilledCell());
+
+            coords.forEach(elt => this.grid[elt.x][elt.y] = null);
+            this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
+
+            const cpyGrid = Utils.deepCopyMatrix(this.grid);
+            this.solve();
+
+            const currentFilledCells = UtilsGrid.countFilledCells(this.grid);
+
+            if (UtilsGrid.isSolved(this.grid, this.possibilities) === PuzzleState.Solved &&
+                this.score > score) {
+                gridResult = cpyGrid;
+                countFilledCells = currentFilledCells;
+            }
+
+            this.grid = Utils.deepCopyMatrix(initialGrid);
+            numberOfTry--;
+        }
+
+        this.grid = gridResult;
+        this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
+    }
     /// Generate sudoku v 2.0
     gen2(minScore: number = 0) {
-        let saveGrid : GridMatrixType = [[]];
+        let saveGrid: GridMatrixType = [[]];
         while (UtilsGrid.isSolved(this.grid, this.possibilities) !== PuzzleState.Solved || this.score < minScore) {
             this.cleanGrid();
             while (UtilsGrid.isEmptyCellLeft(this.grid) && UtilsGrid.isSolved(this.grid, this.possibilities) !== PuzzleState.Solved) {
-                const allIndex = this.getArrayOfAllCoords();
+                const allIndex = this.getArrayOfAllCoordsOfEmptyCell();
                 let ind = Utils.getRandomInt(0, allIndex.length - 1);
                 const {x, y} = allIndex[ind];
                 // pick random a possibility of this cell
@@ -440,6 +489,8 @@ class Solver {
             }
         }
         this.grid = saveGrid;
+
+        //this.setToMinimalGrid();
     }
 
 
@@ -451,11 +502,13 @@ class Solver {
         return this.score;
     }
 
-    /// Clean grid and possibilities
-    /// STEP 1: fill grid with a valid solved puzzle
-    /// STEP 2: Remove number and check each time if sudoku stay solvable
-    generateSudoku()
-    {
+
+
+
+/// Clean grid and possibilities
+/// STEP 1: fill grid with a valid solved puzzle
+/// STEP 2: Remove number and check each time if sudoku stay solvable
+    generateSudoku() {
         this.cleanGrid();
 
 
@@ -477,13 +530,13 @@ class Solver {
             prevValue = tempGrid[x][y];
             tempGrid[x][y] = null;
             this.grid = Utils.deepCopyMatrix(tempGrid);
-            this.possibilities = UtilsGrid.getPossibilitiesFromGrid(this.grid);
+            this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
             puzzleState = this.solve();
         }
 
         tempGrid[x][y] = prevValue;
         this.grid = Utils.deepCopyMatrix(tempGrid);
-        this.possibilities = UtilsGrid.getPossibilitiesFromGrid(this.grid);
+        this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
     }
 
 }

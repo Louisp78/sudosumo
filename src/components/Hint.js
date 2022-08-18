@@ -5,7 +5,7 @@ import UtilsGrid from "./UtilsGrid";
 class Hint {
     constructor(grid) {
         this.grid = grid;
-        this.possibilities = UtilsGrid.getPossibilitiesFromGrid(grid);
+        this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(grid);
     }
 
     getFirstPossibility(){
