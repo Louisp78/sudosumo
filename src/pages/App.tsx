@@ -8,7 +8,6 @@ import Utils from "../components/Utils";
 import ReactConfetti from 'react-confetti';
 import UtilsGrid from "../components/UtilsGrid";
 import {GridArrayType} from "../components/Type";
-import 'react-pro-sidebar/dist/css/styles.css';
 
 enum PuzzleState {
     Undone,
