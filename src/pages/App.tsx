@@ -8,6 +8,7 @@ import Utils from "../components/Utils";
 import ReactConfetti from 'react-confetti';
 import UtilsGrid from "../components/UtilsGrid";
 import {GridArrayType} from "../components/Type";
+import 'react-pro-sidebar/dist/css/styles.css';
 
 enum PuzzleState {
     Undone,
@@ -170,7 +171,7 @@ class App extends React.Component<Props, State> {
     /// Generate a new sudoku
     /// TODO: Add generation with level of difficulty
     /// TODO: Find a way to display loading animation
-    async newSudoku () {
+    async newSudoku() {
 
         this.setState({
             displayLoading: true
@@ -185,14 +186,14 @@ class App extends React.Component<Props, State> {
 
         await generation().then(solver => {
             this.setState({
-                    displayLoading: false
-                });
-                this.setState({
-                    startValues: Utils.convertMatrixToArray(solver.grid)
-                });
-                this.setGrid(Utils.convertMatrixToArray(solver.grid));
+                displayLoading: false
+            });
+            this.setState({
+                startValues: Utils.convertMatrixToArray(solver.grid)
+            });
+            this.setGrid(Utils.convertMatrixToArray(solver.grid));
 
-                this.setState({score: solver.getScore()});
+            this.setState({score: solver.getScore()});
         });
     }
 
