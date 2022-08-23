@@ -1,7 +1,7 @@
 import Utils from "../components/Utils";
 import UtilsGrid from "../components/UtilsGrid";
 import Solver from "../components/Solver";
-import {PuzzleState} from "../App";
+import {PuzzleState} from "../pages/App";
 
 function testGrid(str){
     const grid = UtilsGrid.stringToGridMatrix(str);

@@ -1,6 +1,6 @@
 /// Class only for utils functions for solver
 import Utils from "./Utils";
-import {PuzzleState} from "../App";
+import {PuzzleState} from "../pages/App";
 import {CoordinateType, GridArrayType, GridMatrixType, PossibilitiesType} from "./Type";
 
 class UtilsGrid {

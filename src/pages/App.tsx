@@ -1,11 +1,13 @@
-import './styles/app.css';
-import Grid from "./components/Grid";
+import '../styles/grid.css';
+import '../styles/HUD.css';
+import '../styles/app.css';
+import Grid from "../components/Grid";
 import React from 'react';
-import Solver from "./components/Solver";
-import Utils from "./components/Utils";
+import Solver from "../components/Solver";
+import Utils from "../components/Utils";
 import ReactConfetti from 'react-confetti';
-import UtilsGrid from "./components/UtilsGrid";
-import {GridArrayType} from "./components/Type";
+import UtilsGrid from "../components/UtilsGrid";
+import {GridArrayType} from "../components/Type";
 
 enum PuzzleState {
     Undone,

@@ -1,5 +1,5 @@
 import Utils from './Utils'
-import {PuzzleState} from '../App';
+import {PuzzleState} from '../pages/App';
 import UtilsGrid from "./UtilsGrid";
 import {CoordinateType, GridMatrixType, PossibilitiesType} from "./Type";
 

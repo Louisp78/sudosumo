@@ -24,6 +24,95 @@ input:focus {
   padding: 0 225px;
 }
 
+button{
+    max-lines: 1;
+    text-overflow: ellipsis;
+    background-color: darkorange;
+    font-size: medium;
+    color: black;
+    border: none;
+}
+
+button:hover{
+    cursor: pointer;
+    background-color: ghostwhite;
+    color: darkred;
+    border: 1px solid black;
+}
+
+li:nth-child(n):nth-child(-n+9) {
+    border-top-width: 4px;
+}
+li:nth-child(n+73):nth-child(-n+81) {
+    border-bottom-width: 4px;
+}
+li:nth-child(3n) {
+    border-right-width: 4px;
+}
+li:nth-child(9n+1) {
+    border-left-width: 4px;
+}
+li:nth-child(n+19):nth-child(-n+27) {
+    border-bottom-width: 4px;
+}
+li:nth-child(n+46):nth-child(-n+54) {
+    border-bottom-width: 4px;
+}
+
+ul {
+    display: grid;
+    grid-template-columns: repeat(9, 3vw);
+    grid-template-rows: repeat(9, 3vw);
+    justify-content: center;
+    align-content: center;
+    grid-gap: 0rem;
+    list-style: none;
+    margin: 0 0 1vw;
+    padding: 0;
+    font-size: calc(1vw + 10px);
+}
+
+li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.containerOptions {
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: fit-content;
+}
+
+/* Number grid HUD part */
+.numberGrid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: [col1] 33% [col2] 33% [col3] 33%;
+    grid-gap: 10px;
+    grid-template-rows: [row1] 33% [row2] 33% [row3] 33%;
+    text-align: center;
+    color: #FFF;
+}
+
 .titleContainer {
   position: absolute;
   top: 5vh;
@@ -94,7 +183,7 @@ input:focus {
     flex-direction: column;
     padding: unset;
   }
-  
+
 }
 
 @media screen and (max-width: 500px){
@@ -103,5 +192,5 @@ input:focus {
     grid-template-rows: repeat(9, 8vw);
     margin: 0 0 6vw;
     font-size: calc(5vw + 10px);
-  }  
+  }
 }

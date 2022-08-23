@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import App from '../App';
+import App from '../pages/App';
 import {shallow} from 'enzyme';
 import Solver from '../components/Solver';
 import Utils from '../components/Utils';

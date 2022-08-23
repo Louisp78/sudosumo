@@ -1,5 +1,5 @@
 import React from "react";
-import {EditMode} from "../App";
+import {EditMode} from "../pages/App";
 
 const BoxStyle = {
     rubber: {
