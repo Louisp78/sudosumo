@@ -1,0 +1,66 @@
+button{
+    max-lines: 1;
+    text-overflow: ellipsis;
+    background-color: darkorange;
+    font-size: medium;
+    color: black;
+    border: none;
+    margin: 0 5px;
+    border-radius: 5px;
+}
+
+button:hover{
+    cursor: pointer;
+    background-color: ghostwhite;
+    color: darkred;
+    border: 1px solid black;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.containerOptions {
+    position: absolute;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: fit-content;
+}
+
+/* Number grid HUD part */
+.numberGrid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: [col1] 33% [col2] 33% [col3] 33%;
+    grid-gap: 10px;
+    grid-template-rows: [row1] 33% [row2] 33% [row3] 33%;
+    text-align: center;
+    color: #FFF;
+}
+
+.numberGrid .selected {
+    background-color: ghostwhite;
+    color: darkred;
+    border: 1px solid black;
+    padding: 5px 20px;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.numberGrid .unselected {
+    cursor: pointer;
+    background-color: darkorange;
+    padding: 5px 20px;
+    font-size: large;
+    color: black;
+    font-weight: bold;
+    border-radius: 5px;
+}
