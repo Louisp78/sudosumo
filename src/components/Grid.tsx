@@ -1,7 +1,7 @@
 import React from 'react'
 import Box from './Box'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
-import {EditMode} from "../pages/App";
+import {EditMode} from "../enum";
 
 type Props = {
     values: Array<number | null>,
