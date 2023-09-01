@@ -9,7 +9,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     networks:
-      - backend
+        - backend
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -27,10 +27,10 @@ services:
       dockerfile: Dockerfile.runtime
     ports:
         - "8080:8080"
-    networks:
-        - backend
     volumes:
       - ./target:/workspace/app/target
+    networks:
+        - backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
@@ -44,5 +44,4 @@ volumes:
 
 networks:
   backend:
-    name: app
     driver: bridge
