@@ -8,6 +8,14 @@ An online sudoku, made with React : [SudoSumo](https://Louisp78.github.io/sudosu
 
 ## Solver
 Using constraint propagation algorithm for solving all easy and hard sudokus in few seconds
+
+## Deploy
+To deploy run the python script run_docker_compose.py inside the root folder.
+```bash
+python run_docker_compose.py:w
+```
+
+
 ## Sources
 [Video about constaint propagation algorithm](https://www.youtube.com/watch?v=A_5Hh8xdLFQ)  
 [Understand the naked twins strategy](https://www.youtube.com/watch?v=dCf1b3ZeKdg)  
