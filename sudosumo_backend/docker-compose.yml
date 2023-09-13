@@ -24,7 +24,7 @@ services:
     container_name: "backend"
     build:
       context: .
-      dockerfile: Dockerfile.runtime
+      dockerfile: Dockerfile
     ports:
         - "8080:8080"
     volumes:
