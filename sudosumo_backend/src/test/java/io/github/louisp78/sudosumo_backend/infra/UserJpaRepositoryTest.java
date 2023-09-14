@@ -21,7 +21,7 @@ public class UserJpaRepositoryTest {
     @DirtiesContext
     public void testCreateUser() {
         UserEntity userEntityToSave = new UserEntity();
-        userEntityToSave.setToken("token");
+        userEntityToSave.setEmail("token");
         UserEntity userSaved = userRepositoryJPA.save(userEntityToSave);
 
         assertThat(userSaved).isNotNull();
@@ -33,9 +33,9 @@ public class UserJpaRepositoryTest {
     @DirtiesContext
     public void testGetUserByToken() {
         UserEntity userEntityToSave = new UserEntity();
-        userEntityToSave.setToken("token");
+        userEntityToSave.setEmail("token");
         UserEntity userSaved = userRepositoryJPA.save(userEntityToSave);
-        UserEntity userFound = userRepositoryJPA.findUserEntityByToken("token");
+        UserEntity userFound = userRepositoryJPA.findUserEntityByEmail("token");
 
         assertThat(userFound).isNotNull();
         assertThat(userFound.getId()).isEqualTo(1L);

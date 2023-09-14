@@ -5,9 +5,11 @@ import io.github.louisp78.sudosumo_backend.application.dto.UserDto;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -27,9 +29,13 @@ public class UserController {
     }
 
 
-    @GetMapping("")
-    public ResponseEntity<UserDto> getUserByToken(@RequestBody final GetUserByTokenRequest getUserByTokenRequest) {
-        UserDomain userFound = userService.getUserByToken(getUserByTokenRequest.getToken());
+    @GetMapping("/current")
+    public ResponseEntity<UserDto> getUser(OAuth2AuthenticationToken authentication) {
+        // get oauth2 email
+        Map<String, Object> attributes = authentication.getPrincipal().getAttributes();
+        String email = (String) attributes.get("email");
+        UserDomain userFound = userService.getUserByEmail(email);
+
         if (userFound == null) {
             return ResponseEntity.notFound().build();
         }

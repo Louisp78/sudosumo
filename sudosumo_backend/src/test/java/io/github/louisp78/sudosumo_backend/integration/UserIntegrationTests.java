@@ -23,7 +23,7 @@ public class UserIntegrationTests {
    @DirtiesContext
     public void testAddUser() {
         userService.createUser("token");
-        assertThat(userService.getUserByToken("token")).isNotNull();
+        assertThat(userService.getUserByEmail("token")).isNotNull();
     }
 
 }

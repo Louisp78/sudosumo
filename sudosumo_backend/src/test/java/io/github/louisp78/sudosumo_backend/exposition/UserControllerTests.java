@@ -42,7 +42,7 @@ public class UserControllerTests {
 
     @Test
     public void testGetUserByToken() throws Exception {
-        when(service.getUserByToken(any())).thenReturn(new UserDomain(0L, "token", 0));
+        when(service.getUserByEmail(any())).thenReturn(new UserDomain(0L, "token", 0));
         this.mockMvc.perform(get("/users")
                         .contentType("application/json")
                         .content("{\"token\":\"token\"}"))
@@ -53,7 +53,7 @@ public class UserControllerTests {
 
     @Test
     public void testGetUserByTokenWithWrongToken() throws Exception {
-        when(service.getUserByToken(any())).thenReturn(null);
+        when(service.getUserByEmail(any())).thenReturn(null);
         this.mockMvc.perform(get("/users")
                         .contentType("application/json")
                         .content("{\"token\":\"token\"}"))

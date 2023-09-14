@@ -16,9 +16,9 @@ public class UserRepositoryImpl implements UserRepository {
         this.userRepositoryJPA = usersRepositoryJPA;
     }
 
-    public UserDomain createUser(String token) {
+    public UserDomain createUser(String email) {
         UserEntity userEntityToSave = new UserEntity();
-        userEntityToSave.setToken(token);
+        userEntityToSave.setEmail(email);
         UserEntity userSaved = userRepositoryJPA.save(userEntityToSave);
         return MapperInfra.userEntityToDomain(userSaved);
     }
@@ -33,17 +33,17 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDomain getUserByToken(String token) {
-        UserEntity userFound = userRepositoryJPA.findUserEntityByToken(token);
+    public List<UserDomain> getAllUsers() {
+        List<UserEntity> usersFound = userRepositoryJPA.findAll();
+        return usersFound.stream().map(MapperInfra::userEntityToDomain).toList();
+    }
+
+    @Override
+    public UserDomain getUserByEmail(String email) {
+        UserEntity userFound = userRepositoryJPA.findUserEntityByEmail(email);
         if (userFound == null) {
             return null;
         }
         return MapperInfra.userEntityToDomain(userFound);
-    }
-
-    @Override
-    public List<UserDomain> getAllUsers() {
-        List<UserEntity> usersFound = userRepositoryJPA.findAll();
-        return usersFound.stream().map(MapperInfra::userEntityToDomain).toList();
     }
 }

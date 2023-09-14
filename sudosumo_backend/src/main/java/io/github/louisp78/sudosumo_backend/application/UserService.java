@@ -22,12 +22,12 @@ public class UserService implements UserApplication {
     // if not in use, create user
     // if in use, return user
     @Override
-    public UserDomain createUser(String token) {
-        UserDomain existingUser = userRepository.getUserByToken(token);
+    public UserDomain createUser(String email) {
+        UserDomain existingUser = userRepository.getUserByEmail(email);
         if (existingUser != null) {
             return existingUser;
         } else {
-            return userRepository.createUser(token);
+            return userRepository.createUser(email);
         }
     }
 
@@ -37,12 +37,12 @@ public class UserService implements UserApplication {
     }
 
     @Override
-    public UserDomain getUserByToken(String token) {
-        return userRepository.getUserByToken(token);
+    public List<UserDomain> getAllUsers() {
+        return userRepository.getAllUsers();
     }
 
     @Override
-    public List<UserDomain> getAllUsers() {
-        return userRepository.getAllUsers();
+    public UserDomain getUserByEmail(String email) {
+       return userRepository.getUserByEmail(email);
     }
 }

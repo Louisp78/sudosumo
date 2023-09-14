@@ -16,8 +16,8 @@ public class UserEntity {
     @Column(nullable = false)
     private Long id;
 
-    @Column(unique = true)
-    private String token;
+    @Column(nullable = false, unique=true)
+    private String email;
 
     // by default, the score is 0
     @Column(nullable = false)

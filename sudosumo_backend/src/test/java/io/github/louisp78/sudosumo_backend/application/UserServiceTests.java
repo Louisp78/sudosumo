@@ -36,7 +36,6 @@ public class UserServiceTests {
     public void setUp() {
         UserDomain userDomain = new UserDomain(1L, "token", 0);
 
-        Mockito.when(userRepository.getUserByToken("token")).thenReturn(userDomain);
         Mockito.when(userRepository.createUser("token")).thenReturn(userDomain);
         Mockito.when(userRepository.getUserById(1L)).thenReturn(userDomain);
     }
