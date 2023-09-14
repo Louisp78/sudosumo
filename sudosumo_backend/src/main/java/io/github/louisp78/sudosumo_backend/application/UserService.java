@@ -6,6 +6,8 @@ import io.github.louisp78.sudosumo_backend.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService implements UserApplication {
 
@@ -37,5 +39,10 @@ public class UserService implements UserApplication {
     @Override
     public UserDomain getUserByToken(String token) {
         return userRepository.getUserByToken(token);
+    }
+
+    @Override
+    public List<UserDomain> getAllUsers() {
+        return userRepository.getAllUsers();
     }
 }

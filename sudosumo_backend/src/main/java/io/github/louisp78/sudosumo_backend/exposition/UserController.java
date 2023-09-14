@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -18,14 +20,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    // getUserById
-
-    //TODO: check that token is a valid google token
     @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestBody final CreateUserRequest createUserRequest) {
-        userService.createUser(createUserRequest.getToken());
-        return ResponseEntity.ok().body("User created");
+    public ResponseEntity<UserDto> createUser(@RequestBody final CreateUserRequest createUserRequest) {
+        UserDomain userCreated = userService.createUser(createUserRequest.getToken());
+        return ResponseEntity.ok().body(MapperExpo.userDomainToDto(userCreated));
     }
+
 
     @GetMapping("")
     public ResponseEntity<UserDto> getUserByToken(@RequestBody final GetUserByTokenRequest getUserByTokenRequest) {
@@ -34,5 +34,15 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(MapperExpo.userDomainToDto(userFound));
+    }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDomain> usersFound = userService.getAllUsers();
+        if (usersFound == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(usersFound.stream().map(MapperExpo::userDomainToDto).toList());
     }
 }

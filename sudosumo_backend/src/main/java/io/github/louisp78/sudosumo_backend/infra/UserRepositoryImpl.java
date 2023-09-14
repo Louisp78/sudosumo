@@ -5,6 +5,8 @@ import io.github.louisp78.sudosumo_backend.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
@@ -37,5 +39,11 @@ public class UserRepositoryImpl implements UserRepository {
             return null;
         }
         return MapperInfra.userEntityToDomain(userFound);
+    }
+
+    @Override
+    public List<UserDomain> getAllUsers() {
+        List<UserEntity> usersFound = userRepositoryJPA.findAll();
+        return usersFound.stream().map(MapperInfra::userEntityToDomain).toList();
     }
 }
