@@ -35,11 +35,21 @@ if __name__ == "__main__":
         description="Run Docker Compose with build option and load environment variables from a .env file.")
     parser.add_argument("--build", action="store_true", help="Build images before starting services")
     parser.add_argument("--env-file", help="Path to a .env file to load environment variables")
+    parser.add_argument("--only-front", action="store_true", help="Only start the frontend")
+    parser.add_argument("--only-back", action="store_true", help="Only start the backend")
 
     args = parser.parse_args()
-    # Specify the path to your docker-compose.yml files
+
     compose_file1 = "docs/docker-compose.yml"
     compose_file2 = "sudosumo_backend/docker-compose.yml"
+
+    # Specify the path to your docker-compose.yml files
+    if args.only_front:
+        run_docker_compose(compose_file1, args.build, args.env_file)
+        sys.exit(0)
+    elif args.only_back:
+        run_docker_compose(compose_file2, args.build, args.env_file)
+        sys.exit(0)
 
     run_docker_compose(compose_file1, args.build, args.env_file)
     run_docker_compose(compose_file2, args.build, args.env_file)
