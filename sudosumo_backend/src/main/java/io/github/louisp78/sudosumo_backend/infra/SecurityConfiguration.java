@@ -18,7 +18,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                                 .anyRequest().authenticated()
-                        ).oauth2Login(Customizer.withDefaults());
+                        ).oauth2Login(oauth -> oauth.defaultSuccessUrl("/oauth2/google", true));
         return http.build();
     }
 }
