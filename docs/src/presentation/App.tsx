@@ -9,6 +9,8 @@ import ReactConfetti from 'react-confetti';
 import UtilsGrid from "../components/UtilsGrid";
 import {GridArrayType} from "../components/Type";
 import {EditMode, PuzzleState} from "../enum";
+import {useGetAllUsersQuery} from "../infra/ApiSlice";
+import {UserDto} from "../infra/dto/UserDto";
 
 export const App = () => {
 
@@ -22,6 +24,8 @@ export const App = () => {
     const [displayConfetti, setDisplayConfetti] = React.useState(false);
     const [displayLoading, setDisplayLoading] = React.useState(false);
     const [score, setScore] = React.useState(0);
+
+    const {data, error, isLoading, isSuccess, isError} = useGetAllUsersQuery();
 
 
     useEffect(() => {
@@ -241,6 +245,18 @@ export const App = () => {
         }
     }
 
+    if (isSuccess){
+        return (
+            <div>
+                <h1>Users</h1>
+                <ul>
+                    {data?.map((user : UserDto) => (
+                        <li key={user.id}>{user.score}</li>
+                    ))}
+                </ul>
+            </div>
+        )
+    }
     return (
         <div className="App">
             <div className="game">

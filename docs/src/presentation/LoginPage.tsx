@@ -1,29 +1,11 @@
-import React, {useState} from 'react';
-
-import {CredentialResponse, GoogleLogin} from '@react-oauth/google';
-import {useCreateUserMutation} from "../infra/ApiSlice";
-import {TokenRequest} from "../infra/request/TokenRequest";
+import React from 'react';
 
 export const LoginPage = () => {
-
-    const [token, setToken] = useState<string>();
-    const [createUser, {isLoading: isCreating}] = useCreateUserMutation();
-
-    const onSuccessLogin = async (credentialResponse: CredentialResponse) => {
-        if (credentialResponse.credential != null) {
-            let currentToken: TokenRequest;
-            currentToken = {
-                token: credentialResponse.credential
-            }
-            const responseObject  = await createUser(currentToken);
-            console.log(responseObject);
-        } else
-            console.log("No token found");
-    };
-    const onErrorLogin = () => console.log('Login Failed')
-
     return (
-        <GoogleLogin onSuccess={onSuccessLogin} onError={onErrorLogin}/>
+        <div>
+            <h1>Login Page</h1>
+            <button onClick={() => window.location.href = process.env.REACT_APP_GOOGLE_LOGIN_BACKEND_URL!}>Sign in with google</button>
+        </div>
     )
 }
 

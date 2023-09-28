@@ -1,7 +1,9 @@
 export class TokenRequest {
-    token: string;
+    code: string;
+    state: string;
 
-    constructor(token: string) {
-        this.token = token;
+    constructor(code: string, state: string) {
+        this.code = code;
+        this.state = state;
     }
 }

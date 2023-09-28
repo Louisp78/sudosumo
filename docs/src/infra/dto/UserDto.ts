@@ -1,5 +1,4 @@
 export interface UserDto {
     id : number;
-    name : string;
-
+    score : number;
 }
