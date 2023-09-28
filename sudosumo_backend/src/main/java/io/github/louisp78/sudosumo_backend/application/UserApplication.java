@@ -1,6 +1,5 @@
 package io.github.louisp78.sudosumo_backend.application;
 
-import io.github.louisp78.sudosumo_backend.application.dto.UserDto;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
 
 import java.util.List;

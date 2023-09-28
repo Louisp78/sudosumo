@@ -7,9 +7,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-    sql:
-      init:
-        mode: always
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        default_schema: public
+        jdbc.lob.non_contextual_creation: true
   security:
     oauth2:
       client:
@@ -20,12 +24,11 @@ spring:
                 scope:
                 - email
                 - profile
-        provider:
-            google:
-              user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+                - openid
       resourceserver:
         jwt:
           jwk-set-uri: ${JWK_SET_URI}
+
 
 
 server:

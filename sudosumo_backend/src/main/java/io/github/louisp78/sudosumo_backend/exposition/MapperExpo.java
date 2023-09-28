@@ -1,6 +1,6 @@
 package io.github.louisp78.sudosumo_backend.exposition;
 
-import io.github.louisp78.sudosumo_backend.application.dto.UserDto;
+import io.github.louisp78.sudosumo_backend.exposition.dto.UserDto;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
 import org.modelmapper.ModelMapper;
 

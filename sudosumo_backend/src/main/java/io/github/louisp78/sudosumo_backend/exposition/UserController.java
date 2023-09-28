@@ -1,15 +1,13 @@
 package io.github.louisp78.sudosumo_backend.exposition;
 
 import io.github.louisp78.sudosumo_backend.application.UserService;
-import io.github.louisp78.sudosumo_backend.application.dto.UserDto;
+import io.github.louisp78.sudosumo_backend.exposition.dto.UserDto;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -29,7 +27,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/current")
+    /*@GetMapping("/current")
     public ResponseEntity<UserDto> getUser(OAuth2AuthenticationToken authentication) {
         // get oauth2 email
         Map<String, Object> attributes = authentication.getPrincipal().getAttributes();
@@ -40,7 +38,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(MapperExpo.userDomainToDto(userFound));
-    }
+    }*/
 
 
     @GetMapping("/all")

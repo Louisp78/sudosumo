@@ -1,43 +1,19 @@
 package io.github.louisp78.sudosumo_backend.exposition;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import io.github.louisp78.sudosumo_backend.application.UserService;
-import io.github.louisp78.sudosumo_backend.exposition.dto.AuthDto;
+import io.github.louisp78.sudosumo_backend.domain.UserDomain;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizationContext;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationProvider;
-import org.springframework.security.oauth2.client.authentication.OAuth2LoginReactiveAuthenticationManager;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.web.bind.annotation.*;
-
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
 
 @RestController
 public class AuthorizationController {
@@ -51,9 +27,23 @@ public class AuthorizationController {
     }
 
 
-    @PostMapping("oauth2/authorization/google")
-    public ResponseEntity<String> authorizeGoogle(@RequestBody final AuthDto body) throws GeneralSecurityException, IOException {
-        System.out.println("Code received: " + body.getCode());
+
+    @GetMapping("oauth2/success")
+    public void success(@AuthenticationPrincipal OidcUser principal, HttpSession session, HttpServletResponse response) throws IOException, GeneralSecurityException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("current user logged in : " + principal);
+        UserDomain userInDb = userService.createUser(principal.getEmail());
+
+        response.setHeader("Location", "http://localhost:3000");
+        response.setStatus(302);
+    }
+
+/*
+    @GetMapping("/oauth2/authorize/google")
+    public ResponseEntity<String> authorizeGoogle() {
+
+
+
         final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
         final String googleClientId = System.getenv("GOOGLE_CLIENT_ID");
         final String googleClientSecret = System.getenv("GOOGLE_CLIENT_SECRET");
@@ -114,6 +104,6 @@ public class AuthorizationController {
             e.printStackTrace();
         }
         System.out.println("Invalid ID token.");
-        return ResponseEntity.notFound().build();
-    }
+        return ResponseEntity.ok().build();
+    }*/
 }

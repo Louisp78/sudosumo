@@ -51,5 +51,12 @@ if __name__ == "__main__":
         run_docker_compose(compose_file2, args.build, args.env_file)
         sys.exit(0)
 
+    # Run docker-compose kill and rm -f to remove any existing containers
+    subprocess.run(["docker-compose", "-f", compose_file1, "kill"], check=True)
+    subprocess.run(["docker-compose", "-f", compose_file1, "rm", "-f"], check=True)
+    subprocess.run(["docker-compose", "-f", compose_file2, "kill"], check=True)
+    subprocess.run(["docker-compose", "-f", compose_file2, "rm", "-f"], check=True)
+
+
     run_docker_compose(compose_file1, args.build, args.env_file)
     run_docker_compose(compose_file2, args.build, args.env_file)

@@ -1,24 +1,14 @@
 package io.github.louisp78.sudosumo_backend.application;
 
-import io.github.louisp78.sudosumo_backend.application.dto.UserDto;
+import io.github.louisp78.sudosumo_backend.exposition.dto.UserDto;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
 import io.github.louisp78.sudosumo_backend.domain.UserRepository;
-import io.github.louisp78.sudosumo_backend.exposition.MapperExpo;
-import jakarta.transaction.Transactional;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

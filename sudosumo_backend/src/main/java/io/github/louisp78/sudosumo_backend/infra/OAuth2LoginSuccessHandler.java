@@ -1,9 +1,6 @@
-package com.example.config;
-
-import com.example.entity.RegistrationSource;
-import com.example.entity.UserEntity;
-import com.example.entity.UserRole;
-import com.example.service.UserService;
+package io.github.louisp78.sudosumo_backend.infra;
+/*
+import io.github.louisp78.sudosumo_backend.application.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -64,4 +61,4 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         this.setDefaultTargetUrl(frontendUrl);
         super.onAuthenticationSuccess(request, response, authentication);
     }
-}
+}*/

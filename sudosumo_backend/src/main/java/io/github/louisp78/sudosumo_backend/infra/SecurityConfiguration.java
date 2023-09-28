@@ -36,10 +36,13 @@ public class SecurityConfiguration {
                         .requestMatchers("/oauth2/**").permitAll()
                         .anyRequest().authenticated()
                 )//.oauth2Login(oauth -> oauth.defaultSuccessUrl("/oauth2/google", true));
-                .oauth2Login(oauth -> oauth
+                .oauth2Login(
+                        oauth -> oauth
+                                .defaultSuccessUrl("/oauth2/success", true)
+                                /*
                                 .authorizationEndpoint(authorization -> authorization
                                         .baseUri("/oauth2/authorize/google")
-                                        .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))
+                                        .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))*/
                         )
                 .sessionManagement(session -> session
                         .sessionFixation().migrateSession()
