@@ -8,11 +8,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizationRequestRepository;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,30 +23,21 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                // only disable csrf for /oauth2/** endpoints
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/oauth2/**").permitAll()
-                        .anyRequest().authenticated()
-                )//.oauth2Login(oauth -> oauth.defaultSuccessUrl("/oauth2/google", true));
-                .oauth2Login(oauth -> oauth
-                                .authorizationEndpoint(authorization -> authorization
-                                        .baseUri("/oauth2/authorize/google")
-                                        .authorizationRequestRepository(new HttpSessionOAuth2AuthorizationRequestRepository()))
-                        )
-                .sessionManagement(session -> session
-                        .sessionFixation().migrateSession()
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false)
-                        .expiredUrl("/session-expired")
-                )
-                .build();
+                .formLogin(Customizer.withDefaults())
+                //.csrf(AbstractHttpConfigurer::disable)
+                //.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> {auth
+                                .anyRequest().authenticated();
+                })//.oauth2Login(oauth -> oauth.defaultSuccessUrl("/oauth2/google", true));
+                /*.oauth2Login(oauth -> {
+                    oauth.loginPage("/login").permitAll();
+                    //oauth.successHandler()
+                })*/.build();
     }
 
     @Bean
@@ -64,4 +53,16 @@ public class SecurityConfiguration {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        var u1 = User.withUsername("bill").password("abc123")
+                .authorities("read")
+                .build();
+        var uds = new InMemoryUserDetailsManager();
+        uds.createUser(u1);
+        return uds;
+    }
+
+    //TODO : setup a password encoder ?
 }

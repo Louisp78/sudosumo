@@ -1,4 +1,4 @@
-package io.github.louisp78.sudosumo_backend.application.dto;
+package io.github.louisp78.sudosumo_backend.exposition.dto;
 
 import lombok.*;
 
