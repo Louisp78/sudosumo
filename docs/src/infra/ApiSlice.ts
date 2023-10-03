@@ -3,6 +3,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {TokenRequest} from "./request/TokenRequest";
 import {UserDto} from "./dto/UserDto";
 import {ApiConfig} from "./api_config";
+import {BaseQueryError, BaseQueryMeta} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 // Define a service using a base URL and expected endpoints
 export const apiSlice = createApi({
@@ -19,18 +20,36 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body
             }),
+            transformErrorResponse(baseQueryReturnValue, meta, args) {
+                if (baseQueryReturnValue.status === "FETCH_ERROR") {
+                    ApiConfig.handleUnauthorized();
+                }
+                return baseQueryReturnValue;
+            }
         }),
         getAllUsers: builder.query<UserDto[], void>({
             query: () => ({
                 url: ApiConfig.endpoint.getAllUsers,
                 method: 'GET',
             }),
+            transformErrorResponse(baseQueryReturnValue, meta, args) {
+                if (baseQueryReturnValue.status === "FETCH_ERROR") {
+                    ApiConfig.handleUnauthorized();
+                }
+                return baseQueryReturnValue;
+            }
         }),
         getCurrentUser: builder.query<UserDto, void>({
             query: () => ({
                 url: ApiConfig.endpoint.getCurrentUser,
                 method: 'GET',
             }),
+            transformErrorResponse(baseQueryReturnValue, meta, args) {
+                if (baseQueryReturnValue.status === "FETCH_ERROR") {
+                    ApiConfig.handleUnauthorized();
+                }
+                return baseQueryReturnValue;
+            }
         }),
     }),
 })
@@ -38,9 +57,9 @@ export const apiSlice = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
-    useCreateUserMutation ,
+    useCreateUserMutation,
     useGetAllUsersQuery,
     useGetCurrentUserQuery,
 } = apiSlice
 // Export the reducer for the API slice
-export const { reducer: apiReducer , reducerPath: apiReducerPath, middleware: apiMiddleware} = apiSlice;
+export const {reducer: apiReducer, reducerPath: apiReducerPath, middleware: apiMiddleware} = apiSlice;
