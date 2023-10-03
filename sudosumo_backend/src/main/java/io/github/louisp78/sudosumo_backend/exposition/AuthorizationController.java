@@ -42,7 +42,8 @@ public class AuthorizationController {
         UserDomain userDomain = mapperExpo.userDtoRequestToDomain(userDtoRequest);
         UserDomain userInDb = userService.createUser(userDomain, userDtoRequest.getSub());
 
-        response.setHeader("Location", "http://localhost:3000");
+        //TODO: add this url to .env file
+        response.setHeader("Location", "http://localhost:3000/profile");
         response.setStatus(302);
     }
 

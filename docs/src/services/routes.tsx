@@ -4,6 +4,7 @@ import {App} from "../presentation/App";
 import NoPage from "../presentation/NoPage";
 import LoginPage from "../presentation/LoginPage";
 import {ListOfUsers} from "../presentation/ListOfUsers";
+import {ProfilePage} from "../presentation/Profile";
 
 export default function RenderRoutes() {
     return (
@@ -14,6 +15,7 @@ export default function RenderRoutes() {
                     <Route path="*" element={<NoPage />} />
                     <Route path="/allusers" element={<ListOfUsers />} />
                     <Route path={"/login"} element={<LoginPage />} />
+                    <Route path={"/profile"} element={<ProfilePage />} />
                 </Route>
 
             </Routes>

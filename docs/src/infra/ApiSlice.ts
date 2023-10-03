@@ -2,7 +2,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {TokenRequest} from "./request/TokenRequest";
 import {UserDto} from "./dto/UserDto";
-import {ApiConfig} from "./apiConfig";
+import {ApiConfig} from "./api_config";
 
 // Define a service using a base URL and expected endpoints
 export const apiSlice = createApi({
@@ -13,43 +13,34 @@ export const apiSlice = createApi({
         credentials: 'include',
     }),
     endpoints: (builder) => ({
-        getUserByTokenRequest: builder.query<UserDto, TokenRequest>({
-            query: (body) => ({
-                url: `/users`,
-                method: 'GET',
-                body
-            }),
-        }),
         createUser: builder.mutation<UserDto, TokenRequest>({
             query: (body) => ({
-                url: "/users/create",
+                url: ApiConfig.endpoint.createUser,
                 method: 'POST',
                 body
             }),
         }),
         getAllUsers: builder.query<UserDto[], void>({
             query: () => ({
-                url: "/users/all",
+                url: ApiConfig.endpoint.getAllUsers,
                 method: 'GET',
             }),
         }),
-        sendGoogleAuthorizationCode: builder.mutation<string, TokenRequest>({
-            query: (body) => ({
-                url: "/oauth2/authorization/google",
-                method: 'POST',
-                body
+        getCurrentUser: builder.query<UserDto, void>({
+            query: () => ({
+                url: ApiConfig.endpoint.getCurrentUser,
+                method: 'GET',
             }),
-
         }),
     }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetUserByTokenRequestQuery,
+export const {
     useCreateUserMutation ,
-    useGetAllUsersQuery
-    , useSendGoogleAuthorizationCodeMutation
+    useGetAllUsersQuery,
+    useGetCurrentUserQuery,
 } = apiSlice
 // Export the reducer for the API slice
 export const { reducer: apiReducer , reducerPath: apiReducerPath, middleware: apiMiddleware} = apiSlice;
