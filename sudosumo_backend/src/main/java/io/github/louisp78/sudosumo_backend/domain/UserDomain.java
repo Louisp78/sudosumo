@@ -12,4 +12,7 @@ public class UserDomain {
     private String token;
     private Integer score = 0;
     private String email;
+    private String username;
+    private String firstName;
+    private String lastName;
 }
