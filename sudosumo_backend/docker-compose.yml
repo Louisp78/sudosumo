@@ -3,7 +3,7 @@ services:
   db:
     restart: always
     image: "postgres:15.2-alpine"
-    container_name: db
+    container_name: "sudosumo_db"
     ports:
       - "5432:5432"
     volumes:
@@ -15,7 +15,7 @@ services:
 
 
   backend:
-    container_name: "backend"
+    container_name: "spring_boot_app"
     build:
       context: .
       dockerfile: Dockerfile

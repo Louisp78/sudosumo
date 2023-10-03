@@ -10,9 +10,9 @@ An online sudoku, made with React : [SudoSumo](https://Louisp78.github.io/sudosu
 Using constraint propagation algorithm for solving all easy and hard sudokus in few seconds
 
 ## Deploy
-To deploy run the python script run_docker_compose.py inside the root folder.
+To deploy run the shell script `deployApp` inside the root folder.
 ```bash
-python run_docker_compose.py:w
+./deployApp
 ```
 
 

@@ -1,6 +1,6 @@
 package io.github.louisp78.sudosumo_backend.application;
 
-import io.github.louisp78.sudosumo_backend.exposition.dto.UserDto;
+import io.github.louisp78.sudosumo_backend.exposition.dto.responses.UserDtoResponse;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
 import io.github.louisp78.sudosumo_backend.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +37,8 @@ public class UserServiceTests {
 
     @Test
     public void testCreateUser() {
-        UserDto userDto = new UserDto();
-        userDto.setScore(0);
+        UserDtoResponse userDtoResponse = new UserDtoResponse();
+        userDtoResponse.setScore(0);
 
         UserDomain createdUser = userService.createUser( "token");
 
@@ -49,8 +49,8 @@ public class UserServiceTests {
 
     @Test
     public void testCreateAndGetUser() {
-        UserDto userDto = new UserDto();
-        userDto.setScore(0);
+        UserDtoResponse userDtoResponse = new UserDtoResponse();
+        userDtoResponse.setScore(0);
 
         UserDomain createdUser = userService.createUser( "token");
 

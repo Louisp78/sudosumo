@@ -2,10 +2,13 @@ package io.github.louisp78.sudosumo_backend.infra;
 
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
 import io.github.louisp78.sudosumo_backend.domain.UserRepository;
+import io.github.louisp78.sudosumo_backend.exposition.dto.responses.UserDtoResponse;
+import io.github.louisp78.sudosumo_backend.infra.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -16,9 +19,9 @@ public class UserRepositoryImpl implements UserRepository {
         this.userRepositoryJPA = usersRepositoryJPA;
     }
 
-    public UserDomain createUser(String email) {
-        UserEntity userEntityToSave = new UserEntity();
-        userEntityToSave.setEmail(email);
+    public UserDomain createUser(UserDomain user, String sub) {
+        UserEntity userEntityToSave = MapperInfra.userDomainToEntity(user);
+        userEntityToSave.setSub(sub);
         UserEntity userSaved = userRepositoryJPA.save(userEntityToSave);
         return MapperInfra.userEntityToDomain(userSaved);
     }
@@ -45,5 +48,15 @@ public class UserRepositoryImpl implements UserRepository {
             return null;
         }
         return MapperInfra.userEntityToDomain(userFound);
+    }
+
+    @Override
+    public UserDomain getUserBySub(String sub) {
+        UserEntity userFound = userRepositoryJPA.findUserEntityBySub(sub);
+        if (userFound == null) {
+            return null;
+        }
+        return MapperInfra.userEntityToDomain(userFound);
+
     }
 }

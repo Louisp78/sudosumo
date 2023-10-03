@@ -2,6 +2,9 @@ package io.github.louisp78.sudosumo_backend.exposition;
 
 import io.github.louisp78.sudosumo_backend.application.UserService;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
+import io.github.louisp78.sudosumo_backend.exposition.dto.requests.UserDtoRequest;
+import io.github.louisp78.sudosumo_backend.infra.exceptions.NotEnoughInformationToCreateUserException;
+import io.github.louisp78.sudosumo_backend.infra.exceptions.UserNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +23,24 @@ public class AuthorizationController {
 
 
     private final UserService userService;
+    private final MapperExpo mapperExpo;
 
     @Autowired
-    public AuthorizationController(final UserService userService) {
+    public AuthorizationController(final UserService userService, MapperExpo mapperExpo) {
         this.userService = userService;
+        this.mapperExpo = mapperExpo;
     }
 
 
 
     @GetMapping("oauth2/success")
-    public void success(@AuthenticationPrincipal OidcUser principal, HttpSession session, HttpServletResponse response) throws IOException, GeneralSecurityException {
+    public void success(@AuthenticationPrincipal OidcUser principal, HttpSession session, HttpServletResponse response) throws NotEnoughInformationToCreateUserException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("current user logged in : " + principal);
-        UserDomain userInDb = userService.createUser(principal.getEmail());
+
+        UserDtoRequest userDtoRequest = mapperExpo.oidcUserToUserDtoRequest(principal);
+        UserDomain userDomain = mapperExpo.userDtoRequestToDomain(userDtoRequest);
+        UserDomain userInDb = userService.createUser(userDomain, userDtoRequest.getSub());
 
         response.setHeader("Location", "http://localhost:3000");
         response.setStatus(302);

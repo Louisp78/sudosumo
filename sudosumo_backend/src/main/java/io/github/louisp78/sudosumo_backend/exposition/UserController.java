@@ -1,10 +1,16 @@
 package io.github.louisp78.sudosumo_backend.exposition;
 
 import io.github.louisp78.sudosumo_backend.application.UserService;
-import io.github.louisp78.sudosumo_backend.exposition.dto.UserDto;
+import io.github.louisp78.sudosumo_backend.exposition.dto.requests.UserDtoRequest;
+import io.github.louisp78.sudosumo_backend.exposition.dto.responses.UserDtoResponse;
 import io.github.louisp78.sudosumo_backend.domain.UserDomain;
+import io.github.louisp78.sudosumo_backend.infra.exceptions.NotEnoughInformationToCreateUserException;
+import io.github.louisp78.sudosumo_backend.infra.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,39 +20,43 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final MapperExpo mapperExpo;
 
     @Autowired
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService, final MapperExpo mapperExpo) {
         this.userService = userService;
+        this.mapperExpo = mapperExpo;
     }
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> createUser(@RequestBody final CreateUserRequest createUserRequest) {
-        UserDomain userCreated = userService.createUser(createUserRequest.getToken());
-        return ResponseEntity.ok().body(MapperExpo.userDomainToDto(userCreated));
+    public ResponseEntity<UserDtoResponse> createUser(@RequestBody final UserDtoRequest createUserRequest) {
+        try {
+            UserDomain userDomain = mapperExpo.userDtoRequestToDomain(createUserRequest);
+            UserDomain userCreated = userService.createUser(userDomain, createUserRequest.getSub());
+            return ResponseEntity.ok().body(mapperExpo.userDomainToDtoResponse(userCreated));
+        } catch (NotEnoughInformationToCreateUserException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
     }
 
-
-    /*@GetMapping("/current")
-    public ResponseEntity<UserDto> getUser(OAuth2AuthenticationToken authentication) {
-        // get oauth2 email
-        Map<String, Object> attributes = authentication.getPrincipal().getAttributes();
-        String email = (String) attributes.get("email");
-        UserDomain userFound = userService.getUserByEmail(email);
-
-        if (userFound == null) {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/current")
+    public ResponseEntity<UserDtoResponse> getCurrentUser(@AuthenticationPrincipal OidcUser currentUser) {
+        try {
+            final UserDomain userFound = userService.getUser(currentUser.getSubject());
+            return ResponseEntity.ok().body(mapperExpo.userDomainToDtoResponse(userFound));
+        } catch (UserNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return ResponseEntity.ok().body(MapperExpo.userDomainToDto(userFound));
-    }*/
 
+    }
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    public ResponseEntity<List<UserDtoResponse>> getAllUsers() {
         List<UserDomain> usersFound = userService.getAllUsers();
         if (usersFound == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(usersFound.stream().map(MapperExpo::userDomainToDto).toList());
+        return ResponseEntity.ok().body(usersFound.stream().map(mapperExpo::userDomainToDtoResponse).toList());
     }
 }

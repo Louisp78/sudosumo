@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class UserDomain {
     private Long id;
     private String token;
-    private Integer score;
+    private Integer score = 0;
+    private String email;
 }

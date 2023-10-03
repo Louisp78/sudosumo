@@ -17,10 +17,20 @@ public class UserEntity {
     private Long id;
 
     @Column(nullable = false, unique=true)
+    private String sub;
+
+    @Column(nullable = false)
     private String email;
 
-    // by default, the score is 0
+    @Column(nullable = true)
+    private String firstName;
+
+    @Column(nullable = true)
+    private String lastName;
+
+    @Column(nullable = true, unique=true)
+    private String username;
+
     @Column(nullable = false)
-    @Builder.Default
-    private Integer score = 0;
+    private Integer score;
 }
