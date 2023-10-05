@@ -2,15 +2,16 @@
 import Utils from "./Utils";
 import {PuzzleState} from "../enum";
 import {CoordinateType, GridArrayType, GridMatrixType, PossibilitiesType} from "./Type";
+import CellType from "../domain/CellType";
 
 class UtilsGrid {
 
     /// Reset the matrix of possibilities from the grid
     static resetPossibilitiesFromGrid(grid : GridMatrixType) : PossibilitiesType {
-        var possibilities = Utils.convertArrayToMatrix(Array(81).fill(null), 9);
+        var possibilities = Utils.convertArrayToMatrix(Array(81).fill(undefined), 9);
         for (let x = 0; x < grid.length; x++){
             for (let y = 0; y < grid.length; y++){
-                if (grid[x][y] === null)
+                if (grid[x][y] === undefined)
                     possibilities[x][y] = Array.from(Array(9).fill(1), (elt,index) => elt + index)
                 else
                     possibilities[x][y] = [grid[x][y]]
@@ -21,7 +22,7 @@ class UtilsGrid {
     static isEmptyCellLeft(grid : GridMatrixType) : boolean {
         for (let x = 0; x < grid.length; x++){
             for (let y = 0; y < grid[x].length; y++){
-                if (grid[x][y] == null){
+                if (grid[x][y] === undefined){
                     return true;
                 }
             }
@@ -33,7 +34,7 @@ class UtilsGrid {
         let count = 0;
         for (let x = 0; x < grid.length; x++){
             for (let y = 0; y < grid[x].length; y++){
-                if (grid[x][y] != null){
+                if (grid[x][y] !== undefined){
                     count++;
                 }
             }
@@ -47,7 +48,7 @@ class UtilsGrid {
             return PuzzleState.Invalid;
 
         const gridArr = Utils.convertMatrixToArray(grid);
-        if (gridArr.includes(null)){
+        if (gridArr.includes(undefined)){
             return PuzzleState.Undone;
         }
         for (let x = 0; x < grid.length; x++){
@@ -120,16 +121,16 @@ class UtilsGrid {
         return result;
     }
 
-    static gridArrayToString(grid : GridArrayType) : string {
-        return grid.map(elt => elt === null ? "." : elt.toString()).join("");
+    private static gridArrayToString(grid : GridArrayType) : string {
+        return grid.map(elt => elt === undefined ? "." : elt.toString()).join("");
     }
 
     static gridMatrixToString(grid : GridMatrixType) : string {
-        return grid.map(subArr => subArr.map(elt => elt === null ? "." : elt.toString()).join("")).join("");
+        return grid.map(subArr => subArr.map(elt => elt === undefined ? "." : elt.toString()).join("")).join("");
     }
 
-    static stringToGridArray(string : string) : GridArrayType{
-        return string.split("").map(elt => elt === "." ? null : parseInt(elt));
+    private static stringToGridArray(string : string) : GridArrayType{
+        return string.split("").map(elt => elt === "." ? undefined : parseInt(elt)) as CellType[];
     }
 
     static stringToGridMatrix(string : string) : GridMatrixType{

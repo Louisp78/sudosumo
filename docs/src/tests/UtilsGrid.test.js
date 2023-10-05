@@ -1,5 +1,5 @@
 import UtilsGrid from "../components/UtilsGrid";
-import Solver from "../components/Solver";
+import Solver from "../domain/Solver.ts.old";
 import Utils from "../components/Utils";
 
 test('test reset possibilities from grid', () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import RenderRoutes from "./services/routes";
 import {Provider} from "react-redux";
-import {setupStore} from "./infra/store";
+import {setupStore} from "./infra/redux/store";
 import {GoogleOAuthProvider} from "@react-oauth/google";
 import LoginPage from "./presentation/LoginPage";
 

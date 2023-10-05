@@ -1,7 +1,7 @@
-import Utils from './Utils'
+import Utils from '../components/Utils'
 import {PuzzleState} from "../enum";
-import UtilsGrid from "./UtilsGrid";
-import {CoordinateType, GridMatrixType, PossibilitiesType} from "./Type";
+import UtilsGrid from "../components/UtilsGrid";
+import {CoordinateType, GridMatrixType, PossibilitiesType} from "../components/Type";
 
 
 enum StrategyState {
@@ -11,8 +11,8 @@ enum StrategyState {
 
 
 /// Possibilities array is an array of arrays of possibilities
-/// If a value is null in it, it means it is found in the grid
-class Solver {
+/// If a value is undefined in it, it means it is found in the grid
+class Solver implements ISolverDomain{
     public grid: GridMatrixType;
     public possibilities: PossibilitiesType;
     private score: number;
@@ -28,7 +28,7 @@ class Solver {
         console.log('Getting an hint')
         this.eliminate();
         const fHint = this.getFirstPossibility();
-        if (fHint !== null) {
+        if (fHint !== undefined) {
             let {x, y} = fHint;
             console.log('display hint at x:', x, ' and y:', y)
             this.grid[x][y] = this.possibilities[x][y][0];
@@ -41,14 +41,14 @@ class Solver {
     getFirstPossibility() {
         for (let x = 0; x < this.possibilities.length; x++) {
             for (let y = 0; y < this.possibilities[x].length; y++) {
-                if (this.possibilities[x][y].length === 1 && this.grid[x][y] == null) {
+                if (this.possibilities[x][y].length === 1 && this.grid[x][y] === undefined) {
                     //console.log(this.possibilities[x][y][0], "is the only possibilty at ", x, ", ", y);
                     return {x, y};
                 }
                 // TODO: detect error when this.possibilities[x][y].length == 0 mean puzzle is wrong
             }
         }
-        return null;
+        return undefined;
     }
 
 
@@ -104,7 +104,7 @@ class Solver {
 
         for (let x = 0; x < this.possibilities.length; x++) {
             for (let y = 0; y < this.possibilities[x].length; y++) {
-                if (this.possibilities[x][y].length === 1 && this.grid[x][y] == null) {
+                if (this.possibilities[x][y].length === 1 && this.grid[x][y] === undefined) {
                     strategyState = StrategyState.Worked;
                     this.grid[x][y] = this.possibilities[x][y][0]
                 } else if (this.possibilities[x][y].length === 0) {
@@ -129,7 +129,7 @@ class Solver {
             const histogram = Utils.getHistogramPossibilities(currentLine);
             for (const [key, value] of Object.entries(histogram)) {
                 const index = currentLine.findIndex(elt => elt.includes(parseInt(key)));
-                if (value === 1 && this.grid[x][index] === null) {
+                if (value === 1 && this.grid[x][index] === undefined) {
                     strategyState = StrategyState.Worked;
                     this.grid[x][index] = parseInt(key);
                     this.eliminate();
@@ -142,7 +142,7 @@ class Solver {
             const histogram = Utils.getHistogramPossibilities(currentColumn);
             for (const [key, value] of Object.entries(histogram)) {
                 const index = currentColumn.findIndex(elt => elt.includes(parseInt(key)));
-                if (value === 1 && this.grid[index][y] === null) {
+                if (value === 1 && this.grid[index][y] === undefined) {
                     strategyState = StrategyState.Worked;
                     this.grid[index][y] = parseInt(key);
                     this.eliminate();
@@ -159,7 +159,7 @@ class Solver {
                     const index = currentBlock.findIndex(elt => elt.includes(parseInt(key)));
                     const xBis = x + Math.floor(index / 3);
                     const yBis = y + index % 3;
-                    if (value === 1 && this.grid[xBis][yBis] === null) {
+                    if (value === 1 && this.grid[xBis][yBis] === undefined) {
                         strategyState = StrategyState.Worked;
                         this.grid[xBis][yBis] = parseInt(key);
                         this.eliminate();
@@ -184,7 +184,7 @@ class Solver {
         for (const [key, value] of Object.entries(histogram)) {
             if (value === pairingLength && key.length === pairingLength) {
                 const pairs = Utils.arrayRepOfString(key);
-                //let countVal = 0;
+                //let countVal = 0
                 for (const coordinate of coords) {
                     const x = coordinate.x;
                     const y = coordinate.y;
@@ -377,7 +377,7 @@ class Solver {
 
 
     cleanGrid() {
-        this.grid = Utils.convertArrayToMatrix(Array(81).fill(null), 9);
+        this.grid = Utils.convertArrayToMatrix(Array(81).fill(undefined), 9);
         this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
     }
 
@@ -386,7 +386,7 @@ class Solver {
         const arrayOfCoords = [];
         for (let x = 0; x < this.grid.length; x++) {
             for (let y = 0; y < this.grid.length; y++) {
-                if (this.grid[x][y] === null) {
+                if (this.grid[x][y] === undefined) {
                     arrayOfCoords.push({x, y});
                 }
             }
@@ -398,7 +398,7 @@ class Solver {
         const arrayOfCoords = [];
         for (let x = 0; x < this.grid.length; x++) {
             for (let y = 0; y < this.grid.length; y++) {
-                if (this.grid[x][y] !== null) {
+                if (this.grid[x][y] !== undefined) {
                     arrayOfCoords.push({x, y});
                 }
             }
@@ -445,7 +445,7 @@ class Solver {
             // get coordinates of all filled cells
             const coords = Utils.shuffleArray(this.getArrayOfAllCoordsOfFilledCell());
 
-            coords.forEach(elt => this.grid[elt.x][elt.y] = null);
+            coords.forEach(elt => this.grid[elt.x][elt.y] = undefined);
             this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
 
             const cpyGrid = Utils.deepCopyMatrix(this.grid);
@@ -513,7 +513,7 @@ class Solver {
 
 
         this.fillGrid();
-        let prevValue: number | null = null;
+        let prevValue: number | undefined = undefined;
 
         let tempGrid: GridMatrixType = Utils.deepCopyMatrix(this.grid);
 
@@ -523,12 +523,12 @@ class Solver {
         while (puzzleState === PuzzleState.Solved) {
             x = Utils.getRandomInt(0, 8);
             y = Utils.getRandomInt(0, 8);
-            while (tempGrid[x][y] == null) {
+            while (tempGrid[x][y] === undefined) {
                 x = Utils.getRandomInt(0, 8);
                 y = Utils.getRandomInt(0, 8);
             }
             prevValue = tempGrid[x][y];
-            tempGrid[x][y] = null;
+            tempGrid[x][y] = undefined;
             this.grid = Utils.deepCopyMatrix(tempGrid);
             this.possibilities = UtilsGrid.resetPossibilitiesFromGrid(this.grid);
             puzzleState = this.solve();

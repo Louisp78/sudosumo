@@ -1,6 +1,6 @@
 import Utils from "../components/Utils";
 import UtilsGrid from "../components/UtilsGrid";
-import Solver from "../components/Solver";
+import Solver from "../domain/Solver.ts.old";
 import {PuzzleState} from "../pages/App";
 
 function testGrid(str){

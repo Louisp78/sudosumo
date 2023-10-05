@@ -1,5 +1,5 @@
 import React from 'react'
-import {useGetAllUsersQuery} from "../infra/ApiSlice";
+import {useGetAllUsersQuery} from "../infra/redux/slices/apiSlice";
 export const ListOfUsers = () => {
 
     const {data, isLoading, isSuccess, isError, error} = useGetAllUsersQuery();

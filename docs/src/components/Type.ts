@@ -1,5 +1,7 @@
-type GridMatrixType = Array<Array<number | null>>;
-type GridArrayType = Array<number | null>;
+import CellType from "../domain/CellType";
+
+type GridMatrixType = CellType[][];
+type GridArrayType = CellType[];
 type PossibilitiesType = Array<Array<Array<number>>>;
 type CoordinateType = {x : number, y : number};
 

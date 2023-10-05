@@ -1,60 +1,55 @@
 import React from 'react'
-import Box from './Box'
+import Cell from './Cell'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
-import {EditMode} from "../enum";
+import {useDispatch, useSelector} from "react-redux";
+import {nextSelectedNumberReducer, prevSelectedNumberReducer} from "../infra/redux/slices/editSlice";
+import {RootState} from "../infra/redux/store";
+import UtilsGrid from "./UtilsGrid";
 
 type Props = {
-    values: Array<number | null>,
-    startValues: Array<number | null>,
-    currentNumber: number,
-    handleClick: (i : number) => void,
-    onScrollUp: () => void,
-    onScrollDown: () => void,
-    editMode: EditMode,
+    numberOfRow: number,
+    numberOfCol: number,
 }
 
-type State = never;
 
-class Grid extends React.Component<Props, State> {
+export const Grid = ({numberOfRow, numberOfCol} : Props) => {
+    const cluesStr = useSelector((state: RootState) => state.grid.clues);
+    const clues = UtilsGrid.stringToGridMatrix(cluesStr);
+    const dispatch = useDispatch();
 
-renderSquare(i : number) : JSX.Element {
-    const isLock = this.props.startValues[i] !== null;
-    return <Box
-                key={i} 
-                value={this.props.values[i]}
-                number={this.props.currentNumber}
-                editMode={this.props.editMode}
-                isLock={isLock}
-                onClick={() => this.props.handleClick(i)}
-                />;
-}
-
-renderBoard() : Array<JSX.Element> {
-    const items = this.props.values;
-    let board : Array<JSX.Element> = []
-    for (let i = 0; i < items.length; i++){
-        board.push(this.renderSquare(i));
+    const renderCells = () => {
+        let board: Array<React.JSX.Element> = []
+        for (let x = 0; x < numberOfRow; x++) {
+            for (let y = 0; y < numberOfCol; y++) {
+                const coordinates = {
+                    x: x,
+                    y: y
+                };
+                const cell = <Cell
+                    key={x * 9 + y}
+                    isLocked={clues[x][y] !== undefined}
+                    coordinates={coordinates}/>
+                board.push(cell);
+            }
+        }
+        return board;
     }
-    return board;
-}
 
-render(){
     return (
-    <div className='board'>
-        <ReactScrollWheelHandler
-        upHandler={(e) => this.props.onScrollUp()}
-        downHandler={(e) => this.props.onScrollDown()}
-        >
-            <ul>  
-                {this.renderBoard()}
-            </ul>
-            <div className="note">Your browser doesn't support CSS Grid. You'll need <a href="http://gridbyexample.com/browsers/">a browser that does</a> to use this app.</div>
-        </ReactScrollWheelHandler>
-    </div>
+        <div className='board'>
+            <ReactScrollWheelHandler
+                upHandler={(e) => dispatch(nextSelectedNumberReducer())}
+                downHandler={(e) => dispatch(prevSelectedNumberReducer())}
+            >
+                <ul>
+                    {renderCells()}
+                </ul>
+                <div className="note">Your browser doesn't support CSS Grid. You'll need <a
+                    href="http://gridbyexample.com/browsers/">a browser that does</a> to use this app.
+                </div>
+            </ReactScrollWheelHandler>
+        </div>
     );
-}
-
-
 }
 
 export default Grid;

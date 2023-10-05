@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {apiMiddleware, apiReducer, apiReducerPath} from './ApiSlice';
-import authReducer from "./authReducer";
+import {apiMiddleware, apiReducer, apiReducerPath} from './slices/apiSlice';
+import editSlice from "./slices/editSlice";
+import gridSlice from "./slices/gridSlice";
 
 export const setupStore = configureStore({
     reducer: {
-        auth: authReducer,
+        edit: editSlice.reducer,
+        grid: gridSlice.reducer,
         [apiReducerPath]: apiReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiMiddleware)

@@ -1,5 +1,5 @@
 import React from "react";
-import {useGetCurrentUserQuery} from "../infra/ApiSlice";
+import {useGetCurrentUserQuery} from "../infra/redux/slices/apiSlice";
 
 export const ProfilePage = () => {
     const {data, isLoading, isSuccess, isError, error} = useGetCurrentUserQuery();

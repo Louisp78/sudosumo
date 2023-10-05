@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import {App} from "../presentation/App";
+import {App} from "../presentation/app/App";
 import NoPage from "../presentation/NoPage";
 import LoginPage from "../presentation/LoginPage";
 import {ListOfUsers} from "../presentation/ListOfUsers";
@@ -11,7 +11,7 @@ export default function RenderRoutes() {
         <BrowserRouter>
             <Routes>
                 <Route path="/">
-                    <Route index element={<LoginPage />} />
+                    <Route index element={<App />} />
                     <Route path="*" element={<NoPage />} />
                     <Route path="/allusers" element={<ListOfUsers />} />
                     <Route path={"/login"} element={<LoginPage />} />

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import App from '../pages/App';
 import {shallow} from 'enzyme';
-import Solver from '../components/Solver';
+import Solver from '../domain/Solver.ts.old';
 import Utils from '../components/Utils';
 
 /*test('renders learn react link', () => {
