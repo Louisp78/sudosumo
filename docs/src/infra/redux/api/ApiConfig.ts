@@ -1,4 +1,4 @@
-import {setupStore} from "./store";
+import {setupStore} from "../store";
 
 export class ApiConfig {
     static readonly baseUrl = "http://localhost:8080";

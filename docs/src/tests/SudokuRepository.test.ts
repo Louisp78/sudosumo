@@ -1,4 +1,4 @@
-import UtilsGrid from "../components/UtilsGrid";
+import UtilsGrid from "../infra/utils/UtilsGrid";
 import SudokuDomain from "../domain/SudokuDomain";
 import SudokuRepositoryImpl from "../domain/SudokuRepositoryImpl";
 import {sudokusTestData} from "./data";

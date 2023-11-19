@@ -1,10 +1,11 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom/client';
-import RenderRoutes from "./services/routes";
+import RenderRoutes from "./routes";
 import {Provider} from "react-redux";
 import {setupStore} from "./infra/redux/store";
 import {GoogleOAuthProvider} from "@react-oauth/google";
 import LoginPage from "./presentation/LoginPage";
+import Router from "./routes";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 checkEnv();
@@ -12,7 +13,7 @@ root.render(
     <React.StrictMode>
         <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID!}>
             <Provider store={setupStore}>
-                {RenderRoutes()}
+               <Router />
             </Provider>
         </GoogleOAuthProvider>
     </React.StrictMode>

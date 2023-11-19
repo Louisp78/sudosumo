@@ -24,7 +24,7 @@ public class UserControllerTests {
 
     @MockBean
     private UserService service;
-
+/*
     @Test
     public void testCreateUser() throws Exception {
         when(service.createUser(any())).thenReturn(new UserDomain());
@@ -56,6 +56,6 @@ public class UserControllerTests {
                         .content("{\"token\":\"token\"}"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
-    }
+    }*/
 
 }

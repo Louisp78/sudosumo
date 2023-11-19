@@ -2,13 +2,13 @@ import SudokuDomain from "../../../domain/SudokuDomain";
 import {GridState} from "../../../domain/GridState";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../infra/redux/store";
-import UtilsGrid from "../../../components/UtilsGrid";
+import UtilsGrid from "../../../infra/utils/UtilsGrid";
 import SudokuRepositoryImpl from "../../../domain/SudokuRepositoryImpl";
 import useSetGrid from "./useSetGrid";
 
 const useSolveSudoku = () => {
 
-    const setGrid = useSetGrid();
+    const {setGrid} = useSetGrid();
     const gridStr = useSelector((state: RootState) => state.grid.grid);
     const grid = UtilsGrid.stringToGridMatrix(gridStr);
 

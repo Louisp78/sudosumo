@@ -2,7 +2,7 @@ import SudokuRepository from "./SudokuRepository";
 import SudokuDomain from "./SudokuDomain";
 import CellType from "./CellType";
 import sudoku from "./sudoku_solver_lib/sudoku";
-import UtilsGrid from "../components/UtilsGrid";
+import UtilsGrid from "../infra/utils/UtilsGrid";
 import { GridState } from "./GridState";
 
 class SudokuRepositoryImpl implements SudokuRepository {

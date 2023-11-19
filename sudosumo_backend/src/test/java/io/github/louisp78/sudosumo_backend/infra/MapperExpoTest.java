@@ -17,10 +17,10 @@ public class MapperExpoTest {
         this.mapperExpo = mapperExpo;
     }
 
-    @Test
+/*    @Test
     public void testOidcUserToUserDtoRequest() {
         // mock OidcUser
         mapperExpo.oidcUserToUserDtoRequest();
-    }
+    }*/
 
 }

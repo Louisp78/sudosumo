@@ -2,7 +2,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {TokenRequest} from "../../request/TokenRequest";
 import {UserDto} from "../../dto/UserDto";
-import {ApiConfig} from "../api_config";
+import {ApiConfig} from "./ApiConfig";
 import {BaseQueryError, BaseQueryMeta} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 // Define a service using a base URL and expected endpoints

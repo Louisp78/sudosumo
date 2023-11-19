@@ -1,8 +1,9 @@
+import React from "react";
 const cellStyle = {
-    rubber: {
+    rubber : {
         backgroundColor: "red",
         textDecoration: "line-through"
-    },
+    } as React.CSSProperties,
     pen: {
         color: "darkgrey",
         backgroundColor: "ghostwhite"

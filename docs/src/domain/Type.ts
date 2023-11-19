@@ -1,4 +1,4 @@
-import CellType from "../domain/CellType";
+import CellType from "./CellType";
 
 type GridMatrixType = CellType[][];
 type GridArrayType = CellType[];

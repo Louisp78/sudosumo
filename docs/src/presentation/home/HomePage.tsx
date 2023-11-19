@@ -1,4 +1,4 @@
-import '../../styles/grid.css';
+import './styles/grid.css';
 import '../../styles/HUD.css';
 import '../../styles/app.css';
 
@@ -17,11 +17,14 @@ import useSolveSudoku from "./hooks/useSolveSudoku";
 import useHintSudoku from "./hooks/useHintSudoku";
 import CleanButton from "./components/CleanButton";
 import GridStateMessage from "./components/GridStateMessage";
+import {useGetCurrentUserQuery} from "../../infra/redux/api/apiSlice";
 
 export const HomePage = () => {
     const editMode = useSelector((state: RootState) => state.edit.editMode);
 
     const [displayLoading, setDisplayLoading] = React.useState(false);
+
+
 
     const {score, newSudoku} = useGenerateSudoku({setDisplayLoading: setDisplayLoading,});
     const {confetti} = useDisplayConfetti();

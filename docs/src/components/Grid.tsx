@@ -1,10 +1,10 @@
 import React from 'react'
-import Cell from './Cell'
+import Cell from './cell/Cell'
 import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
 import {useDispatch, useSelector} from "react-redux";
 import {nextSelectedNumberReducer, prevSelectedNumberReducer} from "../infra/redux/slices/editSlice";
 import {RootState} from "../infra/redux/store";
-import UtilsGrid from "./UtilsGrid";
+import UtilsGrid from "../infra/utils/UtilsGrid";
 
 type Props = {
     numberOfRow: number,

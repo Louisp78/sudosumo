@@ -1,8 +1,8 @@
 /// Class only for utils functions for solver
 import Utils from "./Utils";
-import {PuzzleState} from "../enum";
-import {CoordinateType, GridArrayType, GridMatrixType, PossibilitiesType} from "./Type";
-import CellType from "../domain/CellType";
+import {PuzzleState} from "../../enum";
+import {CoordinateType, GridArrayType, GridMatrixType, PossibilitiesType} from "../../domain/Type";
+import CellType from "../../domain/CellType";
 
 class UtilsGrid {
 

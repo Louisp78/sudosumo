@@ -1,4 +1,4 @@
-import Utils from '../components/Utils.ts'
+import Utils from '../infra/utils/Utils.ts'
 import Solver from "../domain/Solver.ts.old";
 test('test string representation of array', () => {
     expect(Utils.stringRepOfArray([1, 2])).toBe('12');

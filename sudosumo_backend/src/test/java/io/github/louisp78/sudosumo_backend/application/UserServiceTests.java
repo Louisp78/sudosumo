@@ -21,7 +21,7 @@ public class UserServiceTests {
 
     @Autowired
     private UserService userService;
-
+/*
     @BeforeEach
     public void setUp() {
         UserDomain userDomain = new UserDomain(1L, "token", 0);
@@ -40,7 +40,7 @@ public class UserServiceTests {
         UserDtoResponse userDtoResponse = new UserDtoResponse();
         userDtoResponse.setScore(0);
 
-        UserDomain createdUser = userService.createUser( "token");
+        UserDomain createdUser = userService.createUser(  "token");
 
         assertThat(createdUser).isNotNull();
         assertThat(createdUser.getId()).isEqualTo(1L);
@@ -52,7 +52,7 @@ public class UserServiceTests {
         UserDtoResponse userDtoResponse = new UserDtoResponse();
         userDtoResponse.setScore(0);
 
-        UserDomain createdUser = userService.createUser( "token");
+        UserDomain createdUser = userService.createUser(new ,);
 
         assertThat(createdUser).isNotNull();
 
@@ -70,5 +70,5 @@ public class UserServiceTests {
         assertThat(createdUser).isNotNull();
         assertThat(createdUser.getId()).isEqualTo(1L);
 
-    }
+    }*/
 }

@@ -4,7 +4,7 @@ import React from "react";
 import SudokuRepositoryImpl from "../../../domain/SudokuRepositoryImpl";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../infra/redux/store";
-import UtilsGrid from "../../../components/UtilsGrid";
+import UtilsGrid from "../../../infra/utils/UtilsGrid";
 
 const GridStateMessage = () => {
     const gridStr = useSelector((state: RootState) => state.grid.grid);

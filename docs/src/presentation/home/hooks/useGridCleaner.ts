@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux";
 import {RootState} from "../../../infra/redux/store";
-import UtilsGrid from "../../../components/UtilsGrid";
+import UtilsGrid from "../../../infra/utils/UtilsGrid";
 import React from "react";
 import useSetGrid from "./useSetGrid";
 

@@ -1,10 +1,10 @@
 import React, {MouseEventHandler, useEffect, useState} from "react";
-import cellStyle from "./cell/cellStyle";
+import cellStyle from "./cellStyle";
 import {useDispatch, useSelector} from "react-redux";
-import {setGridReducer} from "../infra/redux/slices/gridSlice";
-import {RootState} from "../infra/redux/store";
-import UtilsGrid from "./UtilsGrid";
-import CellType from "../domain/CellType";
+import {setGridReducer} from "../../infra/redux/slices/gridSlice";
+import {RootState} from "../../infra/redux/store";
+import UtilsGrid from "../../infra/utils/UtilsGrid";
+import CellType from "../../domain/CellType";
 
 type Props = {
     key: number,

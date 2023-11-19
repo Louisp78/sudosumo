@@ -24,10 +24,10 @@ public class UserRepositoryTests {
 
     @Test
     void testCreateUser() {
-        UserDomain userToSave = new UserDomain(1L, "token", 0);
-        when(userRepository.createUser("token")).thenReturn(userToSave);
+        UserDomain userToSave = new UserDomain();
+        when(userRepository.createUser(userToSave,"token")).thenReturn(userToSave);
 
-        UserDomain userSaved = userRepository.createUser("token");
+        UserDomain userSaved = userRepository.createUser(userToSave, "token");
 
         assertEquals(userToSave, userSaved);
     }
@@ -35,7 +35,8 @@ public class UserRepositoryTests {
     @Test
     void testGetUserById() {
         long id = 1L;
-        UserDomain expectedUser = new UserDomain(id, "john.doe", 0);
+        UserDomain expectedUser = new UserDomain();
+        expectedUser.setId(id);
         when(userRepository.getUserById(id)).thenReturn(expectedUser);
 
         UserDomain actualUser = userRepository.getUserById(id);

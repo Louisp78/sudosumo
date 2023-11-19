@@ -1,7 +1,7 @@
 import CellType from "../../../domain/CellType";
 import SudokuDomain from "../../../domain/SudokuDomain";
 import {setGridReducer, setPreviousGridReducer} from "../../../infra/redux/slices/gridSlice";
-import UtilsGrid from "../../../components/UtilsGrid";
+import UtilsGrid from "../../../infra/utils/UtilsGrid";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../infra/redux/store";
 

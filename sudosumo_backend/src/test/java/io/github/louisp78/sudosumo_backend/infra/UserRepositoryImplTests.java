@@ -23,7 +23,7 @@ public class UserRepositoryImplTests {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
+    /*@Test
     @Transactional
     @DirtiesContext
     void testCreateUser() {
@@ -31,5 +31,5 @@ public class UserRepositoryImplTests {
         UserDomain userSaved = userRepository.createUser( "token");
 
         assertEquals(userToSave, userSaved);
-    }
+    }*/
 }

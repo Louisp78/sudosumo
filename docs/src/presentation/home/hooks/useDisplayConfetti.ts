@@ -3,7 +3,7 @@ import SudokuDomain from "../../../domain/SudokuDomain";
 import SudokuRepositoryImpl from "../../../domain/SudokuRepositoryImpl";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../infra/redux/store";
-import UtilsGrid from "../../../components/UtilsGrid";
+import UtilsGrid from "../../../infra/utils/UtilsGrid";
 
 const useDisplayConfetti = () => {
     const sudokuRepository = new SudokuRepositoryImpl();
