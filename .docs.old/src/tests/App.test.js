@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import App from '../pages/App';
-import {shallow} from 'enzyme';
 import Solver from '../domain/Solver.ts.old';
 import Utils from '../infra/utils/Utils';
 

@@ -1,6 +1,8 @@
 import React from 'react'
 import Cell from './cell/Cell'
-import {useSelector} from "react-redux";
+import ReactScrollWheelHandler from 'react-scroll-wheel-handler';
+import {useDispatch, useSelector} from "react-redux";
+import {nextSelectedNumberReducer, prevSelectedNumberReducer} from "../infra/redux/slices/editSlice";
 import {RootState} from "../infra/redux/store";
 import UtilsGrid from "../infra/utils/UtilsGrid";
 
@@ -13,6 +15,7 @@ type Props = {
 export const Grid = ({numberOfRow, numberOfCol} : Props) => {
     const cluesStr = useSelector((state: RootState) => state.grid.clues);
     const clues = UtilsGrid.stringToGridMatrix(cluesStr);
+    const dispatch = useDispatch();
 
     const renderCells = () => {
         let board: Array<React.JSX.Element> = []
@@ -34,12 +37,17 @@ export const Grid = ({numberOfRow, numberOfCol} : Props) => {
 
     return (
         <div className='board'>
+            <ReactScrollWheelHandler
+                upHandler={(e) => dispatch(nextSelectedNumberReducer())}
+                downHandler={(e) => dispatch(prevSelectedNumberReducer())}
+            >
                 <ul>
                     {renderCells()}
                 </ul>
                 <div className="note">Your browser doesn't support CSS Grid. You'll need <a
                     href="http://gridbyexample.com/browsers/">a browser that does</a> to use this app.
                 </div>
+            </ReactScrollWheelHandler>
         </div>
     );
 }

@@ -2,9 +2,10 @@ import React from "react";
 import {useGetCurrentUserQuery} from "../../infra/redux/api/apiSlice";
 import {Avatar, CircularProgress} from "@mui/material";
 import {cardHeaderStyle, numberOfSudokuFinishedStyle, sectionStyle, userInfoDivStyle} from "./styles";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
 import BaseButton from "../../components/BaseButton";
 import RouteConfig from "../../routes/RouteConfig";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
 
 export const ProfilePage = () => {
     const {data: userDto, isLoading, isSuccess, isError, error} = useGetCurrentUserQuery();
@@ -43,7 +44,7 @@ export const ProfilePage = () => {
         }}>
 
             <section style={sectionStyle}>
-                <BaseButton onClick={() => window.location.href = RouteConfig.editProfile} icon={faPen}/>
+                <BaseButton onClick={() => window.location.href = RouteConfig.editProfile} icon={solid("pen")}/>
                 <div style={cardHeaderStyle}>
                     <div style={userInfoDivStyle}>
                         <Avatar sx={{width: 80, height: 80}}/>

@@ -1,4 +1,6 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {solid} from "@fortawesome/fontawesome-svg-core/import.macro";
+import React from "react";
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
 
 const BaseButton = (props: { onClick: () => void, icon: IconProp }) => {
