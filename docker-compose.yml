@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     restart: always
@@ -17,10 +18,10 @@ services:
   backend:
     container_name: "spring_boot_app"
     build:
-      context: .
+      context: sudosumo_backend
       dockerfile: Dockerfile
     ports:
-        - "8080:8080"
+      - "8080:8080"
     volumes:
       - ./target:/workspace/app/target
     environment:
@@ -34,7 +35,24 @@ services:
       FRONTEND_URL: ${FRONTEND_URL}
       FRONTEND_SUCCESS_LOGIN_ROUTE: ${FRONTEND_SUCCESS_LOGIN_ROUTE}
     depends_on:
-        - db
+      - db
+
+  frontend:
+    container_name: frontend
+    build:
+      context: docs
+      dockerfile: Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - "3001:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - REACT_APP_GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - REACT_APP_GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
+      - REACT_APP_GOOGLE_LOGIN_BACKEND_URL=${GOOGLE_LOGIN_BACKEND_URL}
 
 volumes:
   db:
