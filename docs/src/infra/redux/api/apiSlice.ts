@@ -46,7 +46,6 @@ export const apiSlice = createApi({
             }),
             transformErrorResponse(baseQueryReturnValue, meta, args) {
                 if (baseQueryReturnValue.status === "FETCH_ERROR") {
-                    ApiConfig.handleUnauthorized();
                 }
                 return baseQueryReturnValue;
             }

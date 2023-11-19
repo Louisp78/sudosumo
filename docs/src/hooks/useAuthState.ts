@@ -1,7 +1,8 @@
-import {useGetCurrentUserQuery} from "../../infra/redux/api/apiSlice";
+import {useGetCurrentUserQuery} from "../infra/redux/api/apiSlice";
 import {useEffect} from "react";
 import {useDispatch} from "react-redux";
-import {setUserId} from "../../infra/redux/slices/authSlice";
+import {setUserId} from "../infra/redux/slices/authSlice";
+import {ApiConfig} from "../infra/redux/api/ApiConfig";
 
 const useAuthState = () => {
 
@@ -16,8 +17,10 @@ const useAuthState = () => {
     useEffect(() => {
         if (isSuccessUser){
             dispatch(setUserId(userDto?.id));
+        } else if (isErrorUser) {
+            ApiConfig.handleUnauthorized();
         }
-    }, [dispatch,userDto]);
+    }, [dispatch, isSuccessUser, isErrorUser]);
 }
 
 export default useAuthState;

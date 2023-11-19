@@ -1,7 +1,7 @@
 body{
   margin: 0;
   padding: 0;
-  font-family: Avenir, Heveltica, sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 input {
@@ -11,6 +11,22 @@ input {
 input:focus {
   outline: none /* Removes the border when the input is clicked */
 }
+
+/* FONT THEME */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  margin: 0;
+}
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2.5rem;
+}
+h3 {
+  font-size: 1.5rem;
+}
+
 
 .game {
     position: relative;
