@@ -9,7 +9,8 @@ export class ApiConfig {
     }
 
     static readonly handleUnauthorized = () => {
-        if (window.location.pathname !== "/login")
-            window.location.href = "/login";
+        //TODO: uncomment !!
+        /*if (window.location.pathname !== "/login")
+            window.location.href = "/login";*/
     }
 }
