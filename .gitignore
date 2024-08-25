@@ -1,1 +1,9 @@
 *.env
+
+# No .idea folder
+.idea
+*/**/.idea
+
+# No old folder
+*/**/*.old
+*.old
