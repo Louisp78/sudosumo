@@ -1,0 +1,15 @@
+FROM postgres:16.2-alpine
+
+# Expose the PostgreSQL port
+EXPOSE 5432
+
+# Environment variables (can also be set via docker-compose or command line)
+ENV POSTGRES_USER=${POSTGRES_USER}
+ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+ENV POSTGRES_DB=${POSTGRES_DB}
+
+# Define a volume to persist database data
+VOLUME ["/var/lib/postgresql/data"]
+
+# Start PostgreSQL server
+CMD ["postgres"]
