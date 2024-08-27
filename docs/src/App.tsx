@@ -10,6 +10,7 @@ import { ApiConfig } from "./infra/redux/api/ApiConfig.ts";
 function App() {
 
   console.info("Starting with current api url : ", ApiConfig.baseUrl)
+  console.info("Redirection URL : ", import.meta.env.VITE_APP_GOOGLE_LOGIN_BACKEND_URL!)
   return (
     <React.StrictMode>
       <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_GOOGLE_CLIENT_ID!}>
