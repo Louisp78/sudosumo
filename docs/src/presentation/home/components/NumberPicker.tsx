@@ -1,5 +1,4 @@
 import {EditMode} from "../../../enum";
-import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../../infra/redux/store";
 import {setSelectedNumberReducer} from "../../../infra/redux/slices/editSlice";

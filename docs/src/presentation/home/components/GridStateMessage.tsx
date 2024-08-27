@@ -1,6 +1,5 @@
 import SudokuDomain from "../../../domain/SudokuDomain";
 import {GridState} from "../../../domain/GridState";
-import React from "react";
 import SudokuRepositoryImpl from "../../../domain/SudokuRepositoryImpl";
 import {useSelector} from "react-redux";
 import {RootState} from "../../../infra/redux/store";
